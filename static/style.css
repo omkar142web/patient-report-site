@@ -273,7 +273,18 @@ input:focus {
     border-bottom: 1px solid rgba(255,255,255,0.05);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 1.1rem;
+}
+
+.file-count-badge {
+    background-color: var(--panel);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .grid {
@@ -577,5 +588,3 @@ input:focus {
         padding: 25px;
     }
 }
-
-

@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for
+from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for, flash, jsonify
 from functools import wraps
+from werkzeug.security import check_password_hash, generate_password_hash
 import os
 import re
 
@@ -9,8 +10,8 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "a-default-fallback-key-for-development")
 
 BASE_UPLOAD = "uploads"
-# For production, use environment variables and hashed passwords.
-PASSWORD = os.environ.get("DOCTOR_PASSWORD", "rutu")
+# Store a HASH of the password in production, not the password itself.
+PASSWORD_HASH = os.environ.get("DOCTOR_PASSWORD_HASH")
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 os.makedirs(BASE_UPLOAD, exist_ok=True)
@@ -50,6 +51,13 @@ def next_index(folder, patient):
             except (ValueError, IndexError):
                 # Ignore files that do not match the expected naming convention
                 pass
+        # Use a regex to find the number between the patient name and the extension.
+        # This is more robust than splitting by underscores.
+        # It looks for filenames like "patient_name_123.pdf"
+        match = re.match(rf"^{re.escape(patient)}_(\d+)\..+$", f)
+        if match:
+            nums.append(int(match.group(1)))
+
     return max(nums) + 1 if nums else 1
 
 def allowed_file(filename):
@@ -64,17 +72,14 @@ def index():
     On POST request, it processes and saves uploaded reports for a patient.
     """
     error = None
-    success = None
     if request.method == "POST":
         patient = clean_name(request.form["patient"])
         if not patient:
-            error = "Invalid patient name."
-            return render_template("index.html", error=error)
+            return jsonify({"error": "Invalid patient name."}), 400
 
         files = request.files.getlist("report")
         if not files or all(f.filename == '' for f in files):
-             error = "No files selected."
-             return render_template("index.html", error=error)
+             return jsonify({"error": "No files selected."}), 400
 
         patient_dir = os.path.join(BASE_UPLOAD, patient)
         os.makedirs(patient_dir, exist_ok=True)
@@ -93,9 +98,10 @@ def index():
                 error = "File type not allowed or invalid file."
 
         if uploaded_count > 0:
-            success = f"{uploaded_count} file(s) uploaded successfully for {patient}."
+            success_message = f"{uploaded_count} file(s) uploaded successfully for {patient}."
+            return jsonify({"success": success_message})
 
-    return render_template("index.html", error=error, success=success)
+    return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -104,24 +110,24 @@ def login():
     to the session and redirected to the reports page.
     """
     error = None
-    success = None
-    if 'message' in session:
-        success = session.pop('message', None)
-    
     if request.method == "POST":
-        if request.form.get("password") == PASSWORD:
+        # Ensure the hash is set in the environment
+        if not PASSWORD_HASH:
+            error = "Application is not configured for login."
+        # Check the submitted password against the stored hash
+        elif check_password_hash(PASSWORD_HASH, request.form.get("password", "")):
             session["doctor"] = True
             return redirect(url_for('reports'))
         else:
             error = "Invalid password."
     
-    return render_template("login.html", error=error, success=success)
+    return render_template("login.html", error=error)
 
 @app.route("/logout")
 def logout():
     """Clears the session to log the user out."""
     session.clear()
-    session['message'] = "You have been logged out successfully."
+    flash("You have been logged out successfully.", "success")
     return redirect(url_for('login'))
 
 @app.route("/reports")
@@ -133,14 +139,33 @@ def reports():
     This route requires the user to be logged in.
     """
     search = request.args.get("search", "").lower()
+    # Retrieve flashed messages to display them
+    # This is not strictly necessary if your template handles it,
+    # but it's good practice to be aware of the messages.
+    messages = session.get('_flashes', [])
+
     data = {}
 
     for patient in os.listdir(BASE_UPLOAD):
-        if search and search not in patient.lower():
-            continue
         folder = os.path.join(BASE_UPLOAD, patient)
-        if os.path.isdir(folder):
-            data[patient] = os.listdir(folder)
+        if not os.path.isdir(folder):
+            continue
+
+        all_files = os.listdir(folder)
+        
+        if not search:
+            # If no search term, show all files for the patient
+            if all_files:
+                data[patient] = all_files
+        else:
+            # If there is a search term, filter results
+            patient_name_matches = search in patient.lower()
+            matching_files = [f for f in all_files if search in f.lower()]
+
+            if patient_name_matches:
+                data[patient] = all_files # Show all files if patient name matches
+            elif matching_files:
+                data[patient] = matching_files # Otherwise, show only matching files
 
     return render_template("reports.html", data=data, search=search)
 
@@ -163,6 +188,14 @@ def delete_file(patient, filename):
     path = os.path.join(BASE_UPLOAD, patient, filename)
     if os.path.exists(path):
         os.remove(path)
+        flash(f"Report '{filename}' was deleted successfully.", "success")
+
+        # Check if the parent directory is now empty
+        patient_dir = os.path.dirname(path)
+        if not os.listdir(patient_dir):
+            os.rmdir(patient_dir)
+            flash(f"Patient '{patient}' removed as they have no more reports.", "info")
+
     return redirect(url_for('reports'))
 
 if __name__ == "__main__":

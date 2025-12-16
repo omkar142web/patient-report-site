@@ -1,28 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const delLinks = document.querySelectorAll(".delete");
-    delLinks.forEach(l => {
-        l.addEventListener('click', (e) => {
-            if (!confirm('Are you sure you want to delete this report?')) {
-                e.preventDefault();
-            } else {
-                showToast("🗑 Report deleted");
-            }
-        });
+document.addEventListener("DOMContentLoaded", () => {
+  const delLinks = document.querySelectorAll(".delete");
+  delLinks.forEach((l) => {
+    l.addEventListener("click", (e) => {
+      // The confirm dialog will pause execution. If the user clicks "Cancel",
+      // preventDefault() stops the browser from navigating to the delete link.
+      if (!confirm("Are you sure you want to delete this report?")) {
+        e.preventDefault();
+      }
     });
-
-    const searchInput = document.getElementById('search');
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            const patientSections = document.querySelectorAll('.patient-section');
-            patientSections.forEach(section => {
-                const patientName = section.querySelector('.patient-title').textContent.toLowerCase();
-                if (patientName.includes(searchTerm)) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        });
-    }
+  });
 });

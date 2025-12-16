@@ -1,92 +1,146 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const dropZone = document.querySelector('.drop-zone');
-    const fileInput = document.getElementById('report-input');
-    const fileListContainer = document.getElementById('file-list');
+document.addEventListener("DOMContentLoaded", () => {
+  const dropZone = document.querySelector(".drop-zone");
+  const fileInput = document.getElementById("report-input");
+  const uploadForm = document.getElementById("upload-form");
+  const fileListContainer = document.getElementById("file-list");
 
-    // Store files in a mutable array
-    let selectedFiles = [];
+  // Store File objects in a mutable array
+  let selectedFiles = [];
 
-    if (dropZone) {
-        // Trigger file input click
-        dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        // Drag over
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drag');
-        });
-
-        // Drag leave
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drag');
-        });
-
-        // Drop
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag');
-            const files = Array.from(e.dataTransfer.files);
-            if (files.length) {
-                selectedFiles = [...selectedFiles, ...files]; // Add new files
-                updateFileList();
-            }
-        });
-    }
-
-    // Update file list on change
-    fileInput.addEventListener('change', (event) => {
-        const newFiles = Array.from(event.target.files);
-        selectedFiles = [...selectedFiles, ...newFiles]; // Add new files
-        updateFileList();
+  if (dropZone) {
+    // Trigger file input click
+    dropZone.addEventListener("click", () => {
+      fileInput.click();
     });
 
-    function updateFileList() {
-        fileListContainer.innerHTML = ''; // Clear previous list
+    // Drag over
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag");
+    });
 
-        if (selectedFiles.length === 0) {
-            fileListContainer.style.display = 'block'; // Ensure it's visible to show the message
-            const noFileMessage = document.createElement('p');
-            noFileMessage.className = 'no-files-selected-message';
-            noFileMessage.textContent = 'No files selected.';
-            fileListContainer.appendChild(noFileMessage);
-            return;
-        }
+    // Drag leave
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("drag");
+    });
 
-        fileListContainer.style.display = 'block';
-        const list = document.createElement('ul');
-        selectedFiles.forEach((file, index) => {
-            const item = document.createElement('li');
-            item.className = 'selected-file-item';
-            
-            const fileNameSpan = document.createElement('span');
-            fileNameSpan.textContent = file.name;
-            item.appendChild(fileNameSpan);
+    // Drop
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag");
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      addFiles(droppedFiles);
+    });
+  }
 
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'delete-file-btn';
-            deleteButton.innerHTML = '&times;'; // 'x' icon
-            deleteButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent dropZone click event
-                removeFile(index);
-            });
-            item.appendChild(deleteButton);
-            list.appendChild(item);
-        });
-        fileListContainer.appendChild(list);
+  // Update file list on change
+  fileInput.addEventListener("change", (event) => {
+    const newFiles = Array.from(event.target.files);
+    addFiles(newFiles);
+    // Reset the input so the same file can be selected again if removed
+    fileInput.value = "";
+  });
 
-        // Update the hidden file input with the new FileList
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => dataTransfer.items.add(file));
-        fileInput.files = dataTransfer.files;
+  // Handle form submission with Fetch API
+  uploadForm.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Prevent default page reload
+
+    const submitButton = uploadForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = "Uploading...";
+
+    const formData = new FormData(uploadForm);
+    // Clear existing 'report' fields and append our managed files
+    formData.delete("report");
+    selectedFiles.forEach((file) => {
+      formData.append("report", file);
+    });
+
+    try {
+      const response = await fetch(uploadForm.action, {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+
+      if (response.ok) {
+        showToast(result.success, "success");
+        selectedFiles = []; // Clear files after successful upload
+        updateFileList();
+        uploadForm.reset(); // Clear patient name
+      } else {
+        showToast(result.error || "An unknown error occurred.", "error");
+      }
+    } catch (error) {
+      showToast("Network error. Please try again.", "error");
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     }
+  });
 
-    function removeFile(index) {
-        selectedFiles.splice(index, 1); // Remove file from array
-        updateFileList(); // Re-render the list
+  function addFiles(files) {
+    const allowedExtensions = ["pdf", "png", "jpg", "jpeg", "gif"];
+    let validFiles = [];
+    let invalidFiles = [];
+
+    files.forEach((file) => {
+      const extension = file.name.split(".").pop().toLowerCase();
+      if (allowedExtensions.includes(extension)) {
+        validFiles.push(file);
+      } else {
+        invalidFiles.push(file.name);
+      }
+    });
+
+    selectedFiles = [...selectedFiles, ...validFiles];
+    if (invalidFiles.length > 0) {
+      showToast(`Invalid file type(s): ${invalidFiles.join(", ")}`, "error");
     }
-
-    // Call updateFileList initially to display the "No files selected" placeholder
     updateFileList();
+  }
+
+  function updateFileList() {
+    fileListContainer.innerHTML = ""; // Clear previous list
+
+    if (selectedFiles.length === 0) {
+      fileListContainer.style.display = "block"; // Ensure it's visible to show the message
+      const noFileMessage = document.createElement("p");
+      noFileMessage.className = "no-files-selected-message";
+      noFileMessage.textContent = "No files selected.";
+      fileListContainer.appendChild(noFileMessage);
+      return;
+    }
+
+    fileListContainer.style.display = "block";
+    const list = document.createElement("ul");
+    selectedFiles.forEach((file, index) => {
+      const item = document.createElement("li");
+      item.className = "selected-file-item";
+
+      const fileNameSpan = document.createElement("span");
+      fileNameSpan.textContent = file.name;
+      item.appendChild(fileNameSpan);
+
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "delete-file-btn";
+      deleteButton.innerHTML = "&times;"; // 'x' icon
+      deleteButton.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent dropZone click event
+        removeFile(index);
+      });
+      item.appendChild(deleteButton);
+      list.appendChild(item);
+    });
+    fileListContainer.appendChild(list);
+  }
+
+  function removeFile(index) {
+    selectedFiles.splice(index, 1); // Remove file from array
+    updateFileList(); // Re-render the list
+  }
+
+  // Call updateFileList initially to display the "No files selected" placeholder
+  updateFileList();
 });

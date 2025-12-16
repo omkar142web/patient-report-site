@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Doctor Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="center-box">
+      <h2>🥼 Doctor Access</h2>
+      <p class="subtitle">Authorized medical staff only</p>
 
-<div class="center-box">
-    <h2>🥼 Doctor Access</h2>
-    <p class="subtitle">Authorized medical staff only</p>
-
-    <form action="{{ url_for('login') }}" method="post" class="login-form">
+      <form action="{{ url_for('login') }}" method="post" class="login-form">
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
         </div>
         <button type="submit" class="btn">Login</button>
-    </form>
+      </form>
 
-    <a href="{{ url_for('index') }}" class="back-link" aria-label="Back to Upload Page">Back to Upload Page</a>
-</div>
+      <a
+        href="{{ url_for('index') }}"
+        class="back-link"
+        aria-label="Back to Upload Page"
+        >Back to Upload Page</a
+      >
+    </div>
 
-<div id="toast-container"></div>
+    <div id="toast-container"></div>
 
-<script src="{{ url_for('static', filename='toast.js') }}"></script>
-{% if error %}
-<script>
-    showToast("{{ error }}", "error");
-</script>
-{% endif %}
-{% if success %}
-<script>
-    showToast("{{ success }}", "success");
-</script>
-{% endif %}
-
-</body>
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <script>
+      showToast("{{ message }}", "{{ category }}");
+    </script>
+    {% endfor %} {% endif %} {% endwith %} {% if error %}
+    <script>
+      showToast("{{ error }}", "error");
+    </script>
+    {% endif %}
+  </body>
 </html>
