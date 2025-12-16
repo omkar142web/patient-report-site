@@ -46,35 +46,36 @@
           </h3>
 
           <div class="grid">
-            {% for file in files %}
+            {% for file_obj in files %}
             <div class="card">
-              <div class="file-name">{{ file }}</div>
+              <div class="file-name">{{ file_obj.name }}</div>
+              <div class="file-date">Uploaded on: {{ file_obj.date }}</div>
 
-              {% if file.endswith(".pdf") %}
+              {% if file_obj.name.endswith(".pdf") %}
               <span class="badge pdf">PDF</span>
               <iframe
-                src="{{ url_for('preview', patient=patient, filename=file) }}"
-                title="PDF preview for {{ file }}"
+                src="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
+                title="PDF preview for {{ file_obj.name }}"
               ></iframe>
               {% else %}
               <span class="badge img">IMG</span>
               <img
-                src="{{ url_for('preview', patient=patient, filename=file) }}"
-                alt="Image preview for {{ file }}"
+                src="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
+                alt="Image preview for {{ file_obj.name }}"
               />
               {% endif %}
 
               <div class="actions">
                 <a
-                  href="{{ url_for('preview', patient=patient, filename=file) }}"
+                  href="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
                   target="_blank"
                   rel="noopener noreferrer"
                   >Open</a
                 >
                 <a
-                  href="{{ url_for('delete_file', patient=patient, filename=file) }}"
+                  href="{{ url_for('delete_file', patient=patient, filename=file_obj.name) }}"
                   class="delete"
-                  aria-label="Delete report {{ file }}"
+                  aria-label="Delete report {{ file_obj.name }}"
                   >Delete</a
                 >
               </div>

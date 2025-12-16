@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, send_from_directory
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
+from datetime import datetime
 import re
 
 app = Flask(__name__)
@@ -43,14 +44,6 @@ def next_index(folder, patient):
     """
     nums = []
     for f in os.listdir(folder):
-        if f.startswith(patient + "_"):
-            try:
-                # Extracts the number from filenames like "patient_1.pdf"
-                n = int(f.split("_")[1].split(".")[0])
-                nums.append(n)
-            except (ValueError, IndexError):
-                # Ignore files that do not match the expected naming convention
-                pass
         # Use a regex to find the number between the patient name and the extension.
         # This is more robust than splitting by underscores.
         # It looks for filenames like "patient_name_123.pdf"
@@ -151,21 +144,32 @@ def reports():
         if not os.path.isdir(folder):
             continue
 
-        all_files = os.listdir(folder)
+        # Get file details (name and modification time)
+        file_details = []
+        for f_name in os.listdir(folder):
+            file_path = os.path.join(folder, f_name)
+            mtime = os.path.getmtime(file_path)
+            upload_date = datetime.fromtimestamp(mtime).strftime('%b %d, %Y %I:%M %p')
+            file_details.append({'name': f_name, 'date': upload_date})
+
+        # Sort files by name for consistency
+        file_details.sort(key=lambda x: x['name'])
         
         if not search:
             # If no search term, show all files for the patient
-            if all_files:
-                data[patient] = all_files
+            if file_details:
+                data[patient] = file_details
         else:
             # If there is a search term, filter results
             patient_name_matches = search in patient.lower()
-            matching_files = [f for f in all_files if search in f.lower()]
+            matching_files = [f for f in file_details if search in f['name'].lower()]
 
             if patient_name_matches:
-                data[patient] = all_files # Show all files if patient name matches
+                # Show all files if patient name matches
+                data[patient] = file_details
             elif matching_files:
-                data[patient] = matching_files # Otherwise, show only matching files
+                # Otherwise, show only matching files
+                data[patient] = matching_files
 
     return render_template("reports.html", data=data, search=search)
 
