@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="layout">
+    <div class="sidebar">
+        <h2>🩺 Clinic</h2>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <h1>Patient Records</h1>
+
+        <div class="search-box">
+            <label for="search" class="sr-only">Search patient or report name</label>
+            <input id="search" name="search" placeholder="🔍 Search patient or report name..." value="{{ search }}">
+            <button type="button" class="search-btn">Search</button>
+        </div>
+
+        {% if not data %}
+            <div class="no-data">
+                <p>No patients found.</p>
+            </div>
+        {% endif %}
+
+        {% for patient, files in data.items() %}
+        <section class="patient-section">
+            <h3 class="patient-title">
+                👤 {{ patient }}
+                <span class="count">{{ files|length }} files</span>
+            </h3>
+
+            <div class="grid">
+                {% for file in files %}
+                <div class="card">
+                    <div class="file-name">{{ file }}</div>
+
+                    {% if file.endswith(".pdf") %}
+                        <span class="badge pdf">PDF</span>
+                        <iframe src="{{ url_for('preview', patient=patient, filename=file) }}" title="PDF preview for {{ file }}"></iframe>
+                    {% else %}
+                        <span class="badge img">IMG</span>
+                        <img src="{{ url_for('preview', patient=patient, filename=file) }}" alt="Image preview for {{ file }}">
+                    {% endif %}
+
+                    <div class="actions">
+                        <a href="{{ url_for('preview', patient=patient, filename=file) }}" target="_blank" rel="noopener noreferrer">Open</a>
+                        <a href="{{ url_for('delete_file', patient=patient, filename=file) }}" class="delete" aria-label="Delete report {{ file }}">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="{{ url_for('static', filename='toast.js') }}"></script>
+<script src="{{ url_for('static', filename='reports.js') }}" data-reports-url="{{ url_for('reports') }}"></script>
+
+</body>
+</html>

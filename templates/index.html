@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="center-box">
+    <h2>📤 Upload Patient Reports</h2>
+
+    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+        <input type="text" name="patient" placeholder="Enter Patient's Name" required>
+
+        <div class="drop-zone">
+            <input type="file" name="report" id="report-input" multiple hidden>
+            <p>Drag & Drop files here or <span>Click to select</span></p>
+            <small>Supports: PDF, PNG, JPG, GIF</small>
+        </div>
+
+        <div id="file-list"></div>
+
+        <button type="submit" class="primary-btn">Upload</button>
+    </form>
+
+    <button onclick="window.location.href='{{ url_for('login') }}'" class="doctor-login-link" aria-label="Doctor Login">Doctor Login</button>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="{{ url_for('static', filename='toast.js') }}"></script>
+<script src="{{ url_for('static', filename='upload.js') }}"></script>
+{% if error %}
+<script>
+    showToast("{{ error }}", "error");
+</script>
+{% endif %}
+{% if success %}
+<script>
+    showToast("{{ success }}", "success");
+</script>
+{% endif %}
+
+
+
+<footer style="text-align:center; padding:15px; color:#94a3b8; font-size:14px;">
+  Inspired by Rutu 😗 • Built with ChatGPT • Assisted by Gemini • Powered by Curiosity • Copy-Pasted by OP 
+</footer>
+
+</body>
+</html>
