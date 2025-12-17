@@ -10,7 +10,8 @@ app = Flask(__name__)
 # You can generate a good key using: python -c 'import secrets; print(secrets.token_hex())'
 app.secret_key = os.environ.get("SECRET_KEY", "a-default-fallback-key-for-development")
 
-BASE_UPLOAD = "uploads"
+# For Render, use a persistent disk. The path is set via an environment variable.
+BASE_UPLOAD = os.environ.get("UPLOADS_DIR", "uploads")
 # Store a HASH of the password in production, not the password itself.
 PASSWORD_HASH = os.environ.get("DOCTOR_PASSWORD_HASH")
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
