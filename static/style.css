@@ -350,7 +350,16 @@ input:focus {
 .actions a:first-child:hover { 
     background: rgba(255,255,255,0.1); 
 }
-.delete { color: var(--danger) !important; }
+
+.actions .delete {
+    color: var(--danger) !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
 
 
 

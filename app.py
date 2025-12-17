@@ -122,22 +122,24 @@ def reports():
     """
     search = request.args.get("search", "").lower()
     data = {}
-    
-    # Get all subfolders (patients) from Cloudinary
-    response = cloudinary.api.subfolders(max_results=500)
-    
-    for folder in response.get("folders", []):
-        patient_name = folder["name"]
+
+    # More efficient: Search directly and group results in Python.
+    # This allows searching by patient name (folder) or filename.
+    expression = None
+    if search:
+        # Search in folder (patient name) OR filename
+        expression = f"folder:*{search}* OR filename:*{search}*"
+
+    resources = cloudinary.api.resources(
+        type="upload", 
+        max_results=500,
+        expression=expression
+    )
         
-        # Search logic: filter patients
-        if search and search not in patient_name.lower():
-            continue
-            
-        # Get all resources (files) in the patient's folder
-        resources = cloudinary.api.resources(
-            type="upload", prefix=patient_name, max_results=500
-        )
-        
+    for res in resources.get("resources", []):
+        # The patient name is the folder name
+        patient_name = res.get("folder", "Uncategorized")
+
         file_details = []
         for res in resources.get("resources", []):
             # Cloudinary's created_at is in ISO 8601 format, e.g., '2023-10-27T10:30:00Z'
@@ -153,12 +155,15 @@ def reports():
                 'public_id': res['public_id'],
                 'is_pdf': res['resource_type'] == 'image' and res['format'] == 'pdf'
             })
-        
-        # Sort files by date, newest first
-        file_details.sort(key=lambda x: x['date'], reverse=True)
-        
-        if file_details:
-            data[patient_name] = file_details
+
+        # Group files by patient
+        if patient_name not in data:
+            data[patient_name] = []
+        data[patient_name].append(file_details[0]) # Since we iterate one by one
+
+    # Sort files within each patient group by date
+    for patient in data:
+        data[patient].sort(key=lambda x: x['date'], reverse=True)
 
     return render_template("reports.html", data=data, search=search)
 
