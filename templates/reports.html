@@ -40,8 +40,9 @@
         <section class="patient-section">
           <h3 class="patient-title">
             <span>👤 {{ patient }}</span>
-            <span class="file-count-badge">{{ files|length }} 
-              {% if files|length == 1 %}file{% else %}files{% endif %}
+            <span class="file-count-badge"
+              >{{ files|length }} {% if files|length == 1 %}file{% else
+              %}files{% endif %}
             </span>
           </h3>
 
@@ -51,33 +52,39 @@
               <div class="file-name">{{ file_obj.name }}</div>
               <div class="file-date">Uploaded on: {{ file_obj.date }}</div>
 
-              {% if file_obj.name.endswith(".pdf") %}
+              {% if file_obj.is_pdf %}
               <span class="badge pdf">PDF</span>
               <iframe
-                src="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
+                src="{{ file_obj.url }}"
                 title="PDF preview for {{ file_obj.name }}"
               ></iframe>
               {% else %}
               <span class="badge img">IMG</span>
               <img
-                src="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
+                src="{{ file_obj.url }}"
                 alt="Image preview for {{ file_obj.name }}"
               />
               {% endif %}
 
               <div class="actions">
                 <a
-                  href="{{ url_for('preview', patient=patient, filename=file_obj.name) }}"
+                  href="{{ file_obj.url }}"
                   target="_blank"
                   rel="noopener noreferrer"
                   >Open</a
                 >
-                <a
-                  href="{{ url_for('delete_file', patient=patient, filename=file_obj.name) }}"
-                  class="delete"
-                  aria-label="Delete report {{ file_obj.name }}"
-                  >Delete</a
+                <form
+                  action="{{ url_for('delete_file') }}"
+                  method="post"
+                  style="display: inline"
                 >
+                  <input
+                    type="hidden"
+                    name="public_id"
+                    value="{{ file_obj.public_id }}"
+                  />
+                  <button type="submit" class="delete">Delete</button>
+                </form>
               </div>
             </div>
             {% endfor %}
@@ -87,18 +94,11 @@
       </div>
     </div>
 
-    <div id="toast-container"></div>
-    <script src="{{ url_for('static', filename='toast.js') }}"></script>
-    <script
-      src="{{ url_for('static', filename='reports.js') }}"
-      data-reports-url="{{ url_for('reports') }}"
-    ></script>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <script>showToast("{{ message }}", "{{ category }}");</script>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <script>
+      showToast("{{ message }}", "{{ category }}");
+    </script>
+    {% endfor %} {% endif %} {% endwith %}
   </body>
 </html>

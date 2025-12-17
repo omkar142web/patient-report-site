@@ -1,22 +1,27 @@
 from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for, flash, jsonify
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 import re
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 app = Flask(__name__)
 # For production, use a strong, randomly-generated secret loaded from an environment variable.
 # You can generate a good key using: python -c 'import secrets; print(secrets.token_hex())'
 app.secret_key = os.environ.get("SECRET_KEY", "a-default-fallback-key-for-development")
 
-# For Render, use a persistent disk. The path is set via an environment variable.
-BASE_UPLOAD = os.environ.get("UPLOADS_DIR", "uploads")
-# Store a HASH of the password in production, not the password itself.
+cloudinary.config(
+    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key = os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 PASSWORD_HASH = os.environ.get("DOCTOR_PASSWORD_HASH")
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-os.makedirs(BASE_UPLOAD, exist_ok=True)
 
 def login_required(f):
     """
@@ -35,24 +40,7 @@ def clean_name(name):
     Sanitizes a string to be used as a patient name or filename.
     Replaces any character that is not a letter, number, or underscore with an underscore.
     """
-    return re.sub(r'[^a-zA-Z0-9_]', '_', name)
-
-def next_index(folder, patient):
-    """
-    Calculates the next available index for a new report file.
-    It inspects the filenames in the given folder, finds the highest index, and returns the next integer.
-    For example, if "patient_3.pdf" is the highest, this will return 4.
-    """
-    nums = []
-    for f in os.listdir(folder):
-        # Use a regex to find the number between the patient name and the extension.
-        # This is more robust than splitting by underscores.
-        # It looks for filenames like "patient_name_123.pdf"
-        match = re.match(rf"^{re.escape(patient)}_(\d+)\..+$", f)
-        if match:
-            nums.append(int(match.group(1)))
-
-    return max(nums) + 1 if nums else 1
+    return re.sub(r'[^a-zA-Z0-9_.-]', '_', name)
 
 def allowed_file(filename):
     """Checks if a file's extension is in the ALLOWED_EXTENSIONS set."""
@@ -67,28 +55,28 @@ def index():
     """
     error = None
     if request.method == "POST":
-        patient = clean_name(request.form["patient"])
+        patient = request.form.get("patient")
         if not patient:
             return jsonify({"error": "Invalid patient name."}), 400
 
         files = request.files.getlist("report")
         if not files or all(f.filename == '' for f in files):
              return jsonify({"error": "No files selected."}), 400
-
-        patient_dir = os.path.join(BASE_UPLOAD, patient)
-        os.makedirs(patient_dir, exist_ok=True)
-
-        idx = next_index(patient_dir, patient)
+        
+        patient_folder = clean_name(patient)
         uploaded_count = 0
 
         for f in files:
             if f and f.filename and allowed_file(f.filename):
-                ext = os.path.splitext(f.filename)[1]
-                name = f"{patient}_{idx}{ext}"
-                f.save(os.path.join(patient_dir, name))
-                idx += 1
+                # Use a secure version of the original filename for the public_id
+                filename_base = os.path.splitext(secure_filename(f.filename))[0]
+                public_id = f"{filename_base}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+                
+                cloudinary.uploader.upload(
+                    f, folder=patient_folder, public_id=public_id, resource_type="auto"
+                )
                 uploaded_count += 1
-            elif f.filename != '':
+            elif f and f.filename:
                 error = "File type not allowed or invalid file."
 
         if uploaded_count > 0:
@@ -133,76 +121,64 @@ def reports():
     This route requires the user to be logged in.
     """
     search = request.args.get("search", "").lower()
-    # Retrieve flashed messages to display them
-    # This is not strictly necessary if your template handles it,
-    # but it's good practice to be aware of the messages.
-    messages = session.get('_flashes', [])
-
     data = {}
-
-    for patient in os.listdir(BASE_UPLOAD):
-        folder = os.path.join(BASE_UPLOAD, patient)
-        if not os.path.isdir(folder):
-            continue
-
-        # Get file details (name and modification time)
-        file_details = []
-        for f_name in os.listdir(folder):
-            file_path = os.path.join(folder, f_name)
-            mtime = os.path.getmtime(file_path)
-            upload_date = datetime.fromtimestamp(mtime).strftime('%b %d, %Y %I:%M %p')
-            file_details.append({'name': f_name, 'date': upload_date})
-
-        # Sort files by name for consistency
-        file_details.sort(key=lambda x: x['name'])
+    
+    # Get all subfolders (patients) from Cloudinary
+    response = cloudinary.api.subfolders(max_results=500)
+    
+    for folder in response.get("folders", []):
+        patient_name = folder["name"]
         
-        if not search:
-            # If no search term, show all files for the patient
-            if file_details:
-                data[patient] = file_details
-        else:
-            # If there is a search term, filter results
-            patient_name_matches = search in patient.lower()
-            matching_files = [f for f in file_details if search in f['name'].lower()]
-
-            if patient_name_matches:
-                # Show all files if patient name matches
-                data[patient] = file_details
-            elif matching_files:
-                # Otherwise, show only matching files
-                data[patient] = matching_files
+        # Search logic: filter patients
+        if search and search not in patient_name.lower():
+            continue
+            
+        # Get all resources (files) in the patient's folder
+        resources = cloudinary.api.resources(
+            type="upload", prefix=patient_name, max_results=500
+        )
+        
+        file_details = []
+        for res in resources.get("resources", []):
+            # Cloudinary's created_at is in ISO 8601 format, e.g., '2023-10-27T10:30:00Z'
+            upload_date = datetime.strptime(res["created_at"], "%Y-%m-%dT%H:%M:%SZ").strftime('%b %d, %Y')
+            
+            # Construct the original filename from public_id and format
+            original_filename = f"{res['public_id'].split('/')[-1]}.{res['format']}"
+            
+            file_details.append({
+                'name': original_filename,
+                'date': upload_date,
+                'url': res['secure_url'],
+                'public_id': res['public_id'],
+                'is_pdf': res['resource_type'] == 'image' and res['format'] == 'pdf'
+            })
+        
+        # Sort files by date, newest first
+        file_details.sort(key=lambda x: x['date'], reverse=True)
+        
+        if file_details:
+            data[patient_name] = file_details
 
     return render_template("reports.html", data=data, search=search)
 
-@app.route("/uploads/<patient>/<filename>")
+@app.route("/delete", methods=["POST"])
 @login_required
-def preview(patient, filename):
+def delete_file():
     """
-    Serves a specific report file for preview.
+    Deletes a specific report file from Cloudinary.
     Requires the user to be logged in.
     """
-    return send_from_directory(os.path.join(BASE_UPLOAD, patient), filename)
-
-@app.route("/delete/<patient>/<filename>")
-@login_required
-def delete_file(patient, filename):
-    """
-    Deletes a specific report file.
-    Requires the user to be logged in.
-    """
-    path = os.path.join(BASE_UPLOAD, patient, filename)
-    if os.path.exists(path):
-        os.remove(path)
-        flash(f"Report '{filename}' was deleted successfully.", "success")
-
-        # Check if the parent directory is now empty
-        patient_dir = os.path.dirname(path)
-        if not os.listdir(patient_dir):
-            os.rmdir(patient_dir)
-            flash(f"Patient '{patient}' removed as they have no more reports.", "info")
-
+    public_id = request.form.get("public_id")
+    if public_id:
+        # Deleting requires the public_id
+        cloudinary.uploader.destroy(public_id)
+        flash(f"Report was deleted successfully.", "success")
+    else:
+        flash("Could not delete report: missing ID.", "error")
+        
     return redirect(url_for('reports'))
 
 if __name__ == "__main__":
     # The development server is not for production. A WSGI server like Gunicorn will run the app.
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
