@@ -229,6 +229,11 @@ input:focus {
     outline: none;
 }
 
+.search-box input:focus {
+    box-shadow: none; /* Removes the blue glow on focus */
+    /* You could also change it, e.g.: box-shadow: 0 0 0 2px var(--danger); */
+} 
+
 .search-btn {
     /* Inherits from .btn but with overrides */
     width: auto;
