@@ -760,3 +760,27 @@ input:focus {
     margin-right: 6px;
 }
 
+/* --- Compact Patient Info Card --- */
+
+.patient-info-card {
+    width: 220px;              /* was ~260px */
+    padding: 10px 12px;        /* tighter padding */
+}
+
+.patient-header {
+    font-size: 0.9rem;         /* smaller title */
+    margin-bottom: 6px;
+}
+
+.patient-stats {
+    font-size: 0.8rem;         /* smaller text */
+    gap: 3px;                  /* less vertical spacing */
+}
+
+.patient-stats div {
+    line-height: 1.2;          /* tighter lines */
+}
+
+.info-icon {
+    font-size: 12px;           /* smaller ⓘ icon */
+}
