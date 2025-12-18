@@ -842,7 +842,6 @@ input:focus {
     align-items: center;
     gap: 10px;
     width: 100%;          /* constrain button width */
-    overflow: hidden;     /* CRITICAL for mobile */
 }
 
 /* LEFT: patient name */
@@ -872,7 +871,6 @@ input:focus {
     display: flex;
     width: 100%;
     min-width: 0;
-    overflow: hidden;
 }
 
 .patient-name {
@@ -881,4 +879,36 @@ input:focus {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.patient-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;        /* CRITICAL */
+
+    justify-content: flex-start; /* ⛔ NOT space-between */
+}
+
+.patient-name {
+    flex: 1 1 auto;     /* allow shrinking */
+    min-width: 0;       /* REQUIRED for ellipsis */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.patient-info-wrapper {
+    flex-shrink: 0;     /* keep right side fixed */
+    position: relative;
+}
+
+
+@media (max-width: 480px) {
+    .patient-info-card {
+        right: auto;
+        left: 0;
+    }
 }
