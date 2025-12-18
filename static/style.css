@@ -1171,16 +1171,24 @@ input:focus {
         flex-direction: column;
     }
 
-    .sidebar {
-        width: 100%;
-        min-height: auto;
+    .sidebar { 
+        width: 100% !important; 
+        min-height: auto; 
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        padding: 15px 20px; /* Controls internal spacing */
+        gap: 10px;
+        
+        /* THE FIX: Ensure padding doesn't add to the width */
+        box-sizing: border-box !important; 
+        overflow: hidden; 
+    }
 
-        padding: clamp(10px, 3vw, 16px);
-        box-sizing: border-box;
+    .sidebar .clinic-logo {
+        margin-bottom: 0 !important;
+        font-size: 1.1rem;
     }
 
     .main {
