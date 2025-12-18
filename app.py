@@ -183,6 +183,15 @@ def reports():
         # The folder is the first part of the public_id
         patient_name = public_id.split("/")[0]
 
+        # Initialize patient entry if not exists
+        if patient_name not in data:
+            data[patient_name] = {
+        "files": [],    
+        "pdf_count": 0,
+        "image_count": 0,
+        "video_count": 0,
+    }
+
         upload_date = datetime.strptime(
             res["created_at"], "%Y-%m-%dT%H:%M:%SZ"
         ).strftime('%b %d, %Y')
@@ -196,6 +205,13 @@ def reports():
             "is_video": res["resource_type"] == "video",
             "resource_type": res["resource_type"]
         }
+
+        if file_obj["is_pdf"]:
+            data[patient_name]["pdf_count"] += 1
+        elif file_obj["is_video"]:
+            data[patient_name]["video_count"] += 1
+        else:
+            data[patient_name]["image_count"] += 1
 
         # If it's a PDF, generate a thumbnail URL for the first page
         if file_obj.get("is_pdf"):
@@ -217,7 +233,7 @@ def reports():
             )[0]
 
         # Use setdefault for cleaner grouping
-        data.setdefault(patient_name, []).append(file_obj)
+        data[patient_name]["files"].append(file_obj)
 
     return render_template("reports.html", data=data, search=search)
 

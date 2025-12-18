@@ -672,3 +672,69 @@ input:focus {
         padding: 25px;
     }
 }
+
+
+
+
+
+
+
+
+
+.patient-info-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.info-icon {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dim);
+    padding: 4px 6px;
+    border-radius: 50%;
+}
+
+.info-icon:hover {
+    color: var(--accent);
+    background: rgba(255,255,255,0.05);
+}
+
+.patient-info-card {
+    position: absolute;
+    top: 26px;
+    right: 0;
+    width: 260px;
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 50;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: all 0.2s ease;
+}
+
+.patient-info-wrapper:not(.open):hover .patient-info-card,
+.patient-info-wrapper.open .patient-info-card {
+
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.zip-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+

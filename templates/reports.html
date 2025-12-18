@@ -41,22 +41,42 @@
         <div class="no-data">
           <p>No patients found.</p>
         </div>
-        {% endif %} {% for patient, files in data.items() %}
+        {% endif %} {% for patient, patient_data in data.items() %}
+
         <section class="patient-section">
-          <button
-            class="patient-toggle"
-            onclick="togglePatient('{{ loop.index }}')"
-          >
-            <span>👤 {{ patient }}</span>
-            <span class="file-count-badge"
-              >{{ files|length }} {% if files|length == 1 %}file{% else
-              %}files{% endif %}
-            </span>
-          </button>
+          <button class="patient-toggle" onclick="togglePatient('{{ loop.index }}')">
+  <span>👤 {{ patient }}</span>
+
+  <div class="patient-info-wrapper" onclick="event.stopPropagation()">
+    <span class="info-icon">ⓘ</span>
+
+    <div class="patient-info-card">
+      <div class="patient-header">👤 {{ patient }}</div>
+
+      <div class="patient-stats">
+        📄 PDFs: {{ patient_data.pdf_count }} |
+        🖼 Images: {{ patient_data.image_count }} |
+        🎞 Videos: {{ patient_data.video_count }}
+      </div>
+
+      <form method="POST" action="{{ url_for('download_zip') }}">
+        <input type="hidden" name="patient" value="{{ patient }}" />
+
+        <label><input type="checkbox" name="types" value="pdf" checked /> PDFs</label><br />
+        <label><input type="checkbox" name="types" value="image" checked /> Images</label><br />
+        <label><input type="checkbox" name="types" value="video" checked /> Videos</label><br />
+
+        <button type="submit" class="zip-btn">📎 Download ZIP</button>
+      </form>
+    </div>
+  </div>
+</button>
+
 
           <div class="patient-files" id="patient-{{ loop.index }}">
             <div class="grid">
-              {% for file_obj in files %}
+              {% for file_obj in patient_data.files %}
+
               <div class="card">
                 <div class="file-name">{{ file_obj.name }}</div>
                 <div class="file-date">Uploaded on: {{ file_obj.date }}</div>
@@ -140,5 +160,25 @@
       showToast("{{ message }}", "{{ category }}");
     </script>
     {% endfor %} {% endif %} {% endwith %}
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".info-icon").forEach(icon => {
+    icon.addEventListener("click", e => {
+      e.stopPropagation();
+      const wrapper = icon.closest(".patient-info-wrapper");
+      wrapper.classList.toggle("open");
+    });
+  });
+
+  document.addEventListener("click", () => {
+    document
+      .querySelectorAll(".patient-info-wrapper.open")
+      .forEach(el => el.classList.remove("open"));
+  });
+});
+</script>
+
+
   </body>
 </html>
