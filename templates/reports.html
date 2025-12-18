@@ -38,61 +38,80 @@
         </div>
         {% endif %} {% for patient, files in data.items() %}
         <section class="patient-section">
-          <h3 class="patient-title">
+          <button
+            class="patient-toggle"
+            onclick="togglePatient('{{ loop.index }}')"
+          >
             <span>👤 {{ patient }}</span>
             <span class="file-count-badge"
               >{{ files|length }} {% if files|length == 1 %}file{% else
               %}files{% endif %}
             </span>
-          </h3>
+          </button>
 
-          <div class="grid">
-            {% for file_obj in files %}
-            <div class="card">
-              <div class="file-name">{{ file_obj.name }}</div>
-              <div class="file-date">Uploaded on: {{ file_obj.date }}</div>
+          <div class="patient-files" id="patient-{{ loop.index }}">
+            <div class="grid">
+              {% for file_obj in files %}
+              <div class="card">
+                <div class="file-name">{{ file_obj.name }}</div>
+                <div class="file-date">Uploaded on: {{ file_obj.date }}</div>
 
-              {% if file_obj.is_pdf %}
-              <span class="badge pdf">PDF</span>
-              <iframe
-                src="{{ file_obj.url }}"
-                title="PDF preview for {{ file_obj.name }}"
-              ></iframe>
-              {% else %}
-              <span class="badge img">IMG</span>
-              <img
-                src="{{ file_obj.url }}"
-                alt="Image preview for {{ file_obj.name }}"
-              />
-              {% endif %}
+                {% if file_obj.is_pdf %}
+                <span class="badge pdf">PDF</span>
+                <iframe
+                  src="{{ file_obj.url }}"
+                  title="PDF preview for {{ file_obj.name }}"
+                ></iframe>
+                {% else %}
+                <span class="badge img">IMG</span>
+                <img
+                  src="{{ file_obj.url }}"
+                  alt="Image preview for {{ file_obj.name }}"
+                />
+                {% endif %}
 
-              <div class="actions">
-                <a
-                  href="{{ file_obj.url }}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Open</a
-                >
-                <form
-                  action="{{ url_for('delete_file') }}"
-                  method="post"
-                  style="display: inline"
-                >
-                  <input
-                    type="hidden"
-                    name="public_id"
-                    value="{{ file_obj.public_id }}"
-                  />
-                  <button type="submit" class="delete">Delete</button>
-                </form>
+                <div class="actions">
+                  <a
+                    href="{{ file_obj.url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Open</a
+                  >
+                  <form
+                    action="{{ url_for('delete_file') }}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="public_id"
+                      value="{{ file_obj.public_id }}"
+                    />
+                    <button type="submit" class="delete">Delete</button>
+                  </form>
+                </div>
               </div>
+              {% endfor %}
             </div>
-            {% endfor %}
           </div>
         </section>
         {% endfor %}
       </div>
     </div>
+
+    <script>
+      function togglePatient(id) {
+        const el = document.getElementById("patient-" + id);
+        const btn = el.previousElementSibling; // The button
+        if (el.style.display === "none" || el.style.display === "") {
+          el.style.display = "block";
+          btn.classList.add("active");
+        } else {
+          el.style.display = "none";
+          btn.classList.remove("active");
+        }
+      }
+    </script>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %}

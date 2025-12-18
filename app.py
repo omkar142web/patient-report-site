@@ -47,6 +47,17 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def get_next_index(patient_folder):
+    """
+    Counts existing files in a Cloudinary folder to determine the next file index.
+    """
+    result = cloudinary.api.resources(
+        type="upload",
+        prefix=f"{patient_folder}/",
+        max_results=500  # Adjust if a patient might have more files
+    )
+    return len(result.get("resources", [])) + 1
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     """
@@ -64,20 +75,26 @@ def index():
              return jsonify({"error": "No files selected."}), 400
         
         patient_folder = clean_name(patient)
+        current_index = get_next_index(patient_folder)
         uploaded_count = 0
+        errors = []
 
         for f in files:
             if f and f.filename and allowed_file(f.filename):
-                # Use a secure version of the original filename for the public_id
-                filename_base = os.path.splitext(secure_filename(f.filename))[0]
-                public_id = f"{filename_base}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+                # Create a sequential public_id like 'patient-name_1', 'patient-name_2'
+                public_id = f"{patient_folder}_{current_index}"
                 
                 cloudinary.uploader.upload(
-                    f, folder=patient_folder, public_id=public_id, resource_type="auto"
+                    f,
+                    folder=patient_folder,
+                    public_id=public_id,
+                    resource_type="auto"
                 )
+                current_index += 1
                 uploaded_count += 1
             elif f and f.filename:
-                error = "File type not allowed or invalid file."
+                # Collect errors for files that are not allowed
+                errors.append(f"File '{secure_filename(f.filename)}' has an unsupported type.")
 
         if uploaded_count > 0:
             success_message = f"{uploaded_count} file(s) uploaded successfully for {patient}."

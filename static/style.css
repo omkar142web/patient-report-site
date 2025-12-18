@@ -269,6 +269,28 @@ input:focus {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
+.patient-toggle {
+    width: 100%;
+    background: var(--panel);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.patient-files {
+    display: none;
+    padding-left: 10px; /* Slight indent for files */
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
