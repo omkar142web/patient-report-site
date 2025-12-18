@@ -31,7 +31,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get("doctor"):
-            return redirect(url_for('login'))
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -132,7 +132,7 @@ def logout():
     """Clears the session to log the user out."""
     session.clear()
     flash("You have been logged out successfully.", "success")
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route("/reports")
 @login_required
