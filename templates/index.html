@@ -57,5 +57,12 @@
       Inspired by Rutu 😗 • Built with ChatGPT • Assisted by Gemini • Powered by
       Curiosity • Visualized by OP
     </footer>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <script>
+      showToast("{{ message }}", "{{ category }}");
+    </script>
+    {% endfor %} {% endif %} {% endwith %}
   </body>
 </html>
