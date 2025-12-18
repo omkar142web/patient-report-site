@@ -152,13 +152,28 @@ def reports():
         # Search in folder (patient name) OR filename
         expression = f"folder:*{search}* OR filename:*{search}*"
 
-    resources = cloudinary.api.resources(
-        type="upload", 
+    # Fetch images and PDFs (resource_type="image")
+    resources_img = cloudinary.api.resources(
+        type="upload",
+        resource_type="image",
         max_results=500,
         expression=expression
     )
-        
-    for res in resources.get("resources", []):
+
+    # Fetch videos (resource_type="video")
+    resources_vid = cloudinary.api.resources(
+        type="upload",
+        resource_type="video",
+        max_results=500,
+        expression=expression
+    )
+
+    # Merge the results from both queries
+    all_resources = (
+        resources_img.get("resources", []) + resources_vid.get("resources", [])
+    )
+
+    for res in all_resources:
         public_id = res["public_id"]
 
         # Skip root-level files by checking for a separator in the public_id
