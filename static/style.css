@@ -85,8 +85,8 @@ a {
     padding-top: 20px;
 }
 
-.sidebar .logout:hover {
-    color: var(--danger);   /* keep red */
+.sidebar a.logout:hover {
+    color: var(--danger) !important;   /* keep red */
     background: rgba(239, 68, 68, 0.1);
 }
 
