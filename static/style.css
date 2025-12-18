@@ -246,26 +246,34 @@ input:focus {
     border-radius: 14px;
     margin: 0;
 
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    background: linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent-hover),
+        var(--accent)
+    );
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+
     color: #000;
     font-weight: 700;
     border: none;
     cursor: pointer;
 
-    /* ✅ transition ONLY what changes */
-    transition: background-color 0.2s ease, transform 0.15s ease;
+    transition:
+        background-position 0.35s ease,
+        transform 0.15s ease;
 }
 
-
-.search-btn:hover { 
-    background: var(--accent-hover);
+.search-btn:hover {
+    background-position: 100% 50%;
     transform: translateY(-1px);
 }
 
 .search-btn:active {
-    background: #0ea5e9; /* darker blue on click */
     transform: translateY(0);
 }
+
 
 /* Grid & Cards */
 .patient-title {
