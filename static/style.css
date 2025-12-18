@@ -1042,3 +1042,155 @@ input:focus {
     transform: translateY(5px);
     transition: all 0.2s ease;
 }
+
+
+
+/* =========================================================
+   FINAL FIX — Patient row truncation + popup + mobile safety
+   ========================================================= */
+
+/* -------------------------------
+   Patient toggle row (GRID-based)
+   ------------------------------- */
+.patient-toggle {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+
+    /* keep your existing look */
+    background: var(--panel);
+    padding: clamp(12px, 3vw, 16px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Patient name — THIS enables ellipsis */
+.patient-name {
+    min-width: 0;              /* REQUIRED */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Right side: (n files) + info icon */
+.patient-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.file-count-text {
+    white-space: nowrap;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+/* -------------------------------
+   Info popup (safe + centered)
+   ------------------------------- */
+.patient-info-card {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+
+    width: min(180px, 80vw);
+    z-index: 1000;
+
+    background: rgba(30, 41, 59, 0.98);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: all 0.2s ease;
+}
+
+/* Show popup */
+.patient-info-wrapper.open .patient-info-card {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* -------------------------------
+   Center popup content nicely
+   ------------------------------- */
+.patient-info-card .patient-header {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.patient-stats {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin: 0 auto;
+}
+
+.patient-stats div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* -------------------------------
+   Mobile edge protection
+   ------------------------------- */
+@media (max-width: 480px) {
+    .patient-info-card {
+        right: auto;
+        left: 0;
+    }
+}
+
+/* =========================================================
+   Header / Sidebar mobile overhang fix (responsive)
+   ========================================================= */
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: clamp(10px, 3vw, 16px);
+        box-sizing: border-box;
+    }
+
+    .main {
+        width: 100%;
+        padding: clamp(16px, 4vw, 24px);
+        overflow-x: hidden;
+    }
+}
+
+/* Safety net: never allow horizontal scroll */
+body {
+    overflow-x: hidden;
+}
