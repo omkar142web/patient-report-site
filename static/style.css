@@ -794,3 +794,15 @@ input:focus {
     text-overflow: ellipsis;    /* show ... if needed */
     max-width: 100%;
 }
+
+
+
+/* --- Truncate long patient names in list rows --- */
+
+.patient-toggle span:first-child {
+    display: block;
+    max-width: 75%;           /* controls how much space name can use */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
