@@ -48,13 +48,14 @@ a {
     flex-direction: column;
 }
 
-.sidebar h2 {
+.sidebar .clinic-logo {
     font-size: 1.4rem;
     letter-spacing: 1.5px;
     margin-bottom: 30px;
     color: var(--accent);
     text-transform: uppercase;
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    text-decoration: none;
 }
 
 .sidebar a {
