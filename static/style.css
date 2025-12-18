@@ -918,16 +918,79 @@ input:focus {
 /* Center content inside patient info card */
 .patient-info-card {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the header and the stats block */
 }
 
 /* Center stats rows nicely */
 .patient-stats {
-    align-items: center;   /* centers flex children horizontally */
+    display: inline-flex; /* Shrink to fit content */
+    flex-direction: column;
+    align-items: flex-start; /* Keep icons aligned in a vertical line */
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin: 0 auto; /* Extra insurance for centering */
 }
 
-/* Optional: center each stat line icon+text */
+/* Ensure each stat line has a consistent layout */
 .patient-stats div {
     display: flex;
-    justify-content: center;
-    gap: 6px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px; /* Consistent space between icon and text */
+    width: 100%;
+}
+
+/* Optional: Give icons a fixed width so the text starts at the same spot */
+.patient-stats div span:first-child, 
+.patient-stats div i {
+    width: 18px; 
+    text-align: center;
+}
+
+/* =========================================================
+   FORCE truncation for patient names - FIX
+   ========================================================= */
+
+.patient-toggle {
+    display: grid;
+    /* Column 1: Flexible name, Column 2: Fixed-width info stuff */
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    max-width: 100%; /* Prevents growing beyond parent */
+    box-sizing: border-box;
+    overflow: hidden; /* Contains children */
+    
+    /* Reset existing button styles to ensure consistency */
+    background: var(--panel);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.patient-name {
+    min-width: 0;           /* CRITICAL: Allows grid item to shrink below content size */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.patient-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;         /* Prevents the (n files) from disappearing */
+    justify-content: flex-end;
+}
+
+.file-count-text {
+    white-space: nowrap;    /* Prevents "(2" and "files)" from splitting into two lines */
+    font-size: 0.8rem;
+    color: var(--text-dim);
 }
