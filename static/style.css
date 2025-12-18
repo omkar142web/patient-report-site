@@ -797,12 +797,34 @@ input:focus {
 
 
 
-/* --- Truncate long patient names in list rows --- */
+/* =========================================================
+   Patient list row — truncate NAME only, keep right side intact
+   ========================================================= */
 
-.patient-toggle span:first-child {
-    display: block;
-    max-width: 75%;           /* controls how much space name can use */
+.patient-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Patient name (LEFT) */
+.patient-name {
+    flex: 1;                  /* take remaining space */
+    min-width: 0;             /* REQUIRED for ellipsis */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Right side: (n files) + ⓘ */
+.patient-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;           /* NEVER shrink */
+}
+
+.file-count-text {
+    white-space: nowrap;      /* keep "(n files)" intact */
+}
+
