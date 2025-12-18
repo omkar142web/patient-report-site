@@ -179,6 +179,16 @@ def reports():
             "is_pdf": res["format"] == "pdf"
         }
 
+        # If it's a PDF, generate a thumbnail URL for the first page
+        if file_obj["is_pdf"]:
+            file_obj["thumbnail_url"] = cloudinary.utils.cloudinary_url(
+                public_id,
+                resource_type="image", # PDFs are treated as images for transformations
+                format="jpg",          # Convert to JPG for the thumbnail
+                page=1,                # Get the first page
+                secure=True
+            )[0]
+
         # Use setdefault for cleaner grouping
         data.setdefault(patient_name, []).append(file_obj)
 

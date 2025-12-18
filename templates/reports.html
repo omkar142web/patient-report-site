@@ -58,10 +58,14 @@
 
                 {% if file_obj.is_pdf %}
                 <span class="badge pdf">PDF</span>
-                <iframe
-                  src="{{ file_obj.url }}"
-                  title="PDF preview for {{ file_obj.name }}"
-                ></iframe>
+                <!-- Link to the full PDF -->
+                <a href="{{ file_obj.url }}" target="_blank" rel="noopener noreferrer">
+                  <!-- Show the generated thumbnail image -->
+                  <img 
+                    src="{{ file_obj.thumbnail_url }}" 
+                    alt="Preview of PDF: {{ file_obj.name }}"
+                  />
+                </a>
                 {% else %}
                 <span class="badge img">IMG</span>
                 <img
