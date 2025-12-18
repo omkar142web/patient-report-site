@@ -154,39 +154,33 @@ def reports():
     resources = cloudinary.api.resources(
         type="upload", 
         max_results=500,
-        expression=expression,
-        with_field="folder"
+        expression=expression
     )
         
     for res in resources.get("resources", []):
-        # The patient name is the folder name from Cloudinary.
-        # CRITICAL: If a file has no folder, it's a root-level file. Skip it.
-        patient_name = res.get("folder")
-        if not patient_name:
-            continue
+        public_id = res["public_id"]
+
+        # Skip root-level files by checking for a separator in the public_id
+        if "/" not in public_id:
+            continue  
+
+        # The folder is the first part of the public_id
+        patient_name = public_id.split("/")[0]
 
         upload_date = datetime.strptime(
             res["created_at"], "%Y-%m-%dT%H:%M:%SZ"
         ).strftime('%b %d, %Y')
 
-        original_filename = f"{res['public_id'].split('/')[-1]}.{res['format']}"
-
         file_obj = {
-            'name': original_filename,
-            'date': upload_date,
-            'url': res['secure_url'],
-            'public_id': res['public_id'],
-            'is_pdf': res['resource_type'] == 'image' and res['format'] == 'pdf'
+            "name": f"{public_id.split('/')[-1]}.{res['format']}",
+            "date": upload_date,
+            "url": res["secure_url"],
+            "public_id": public_id,
+            "is_pdf": res["format"] == "pdf"
         }
 
-        # Group files by patient
-        if patient_name not in data:
-            data[patient_name] = []
-        data[patient_name].append(file_obj)
-
-    # Sort files within each patient group by date
-    for patient in data:
-        data[patient].sort(key=lambda x: x['date'], reverse=True)
+        # Use setdefault for cleaner grouping
+        data.setdefault(patient_name, []).append(file_obj)
 
     return render_template("reports.html", data=data, search=search)
 
