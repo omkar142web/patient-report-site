@@ -750,3 +750,13 @@ input:focus {
     color: var(--text-dim);
 }
 
+
+
+
+
+.file-count-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-right: 6px;
+}
+

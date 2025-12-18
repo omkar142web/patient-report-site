@@ -47,8 +47,14 @@
           <button class="patient-toggle" onclick="togglePatient('{{ loop.index }}')">
   <span>👤 {{ patient }}</span>
 
+  
   <div class="patient-info-wrapper" onclick="event.stopPropagation()">
-    <span class="info-icon">ⓘ</span>
+  <span class="file-count-text">
+    ({{ patient_data.files | length }} files)
+  </span>
+
+  <span class="info-icon">ⓘ</span>
+
 
     <div class="patient-info-card">
       <div class="patient-header">👤 {{ patient }}</div>
