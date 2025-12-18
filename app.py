@@ -21,7 +21,7 @@ cloudinary.config(
     secure=True
 )
 PASSWORD_HASH = os.environ.get("DOCTOR_PASSWORD_HASH")
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'webm'}
 
 def login_required(f):
     """
@@ -177,16 +177,26 @@ def reports():
             "date": upload_date,
             "url": res["secure_url"],
             "public_id": public_id,
-            "is_pdf": res["format"] == "pdf"
+            "is_pdf": res["format"] == "pdf",
+            "is_video": res["resource_type"] == "video"
         }
 
         # If it's a PDF, generate a thumbnail URL for the first page
-        if file_obj["is_pdf"]:
+        if file_obj.get("is_pdf"):
             file_obj["thumbnail_url"] = cloudinary.utils.cloudinary_url(
                 public_id,
                 resource_type="image", # PDFs are treated as images for transformations
                 format="jpg",          # Convert to JPG for the thumbnail
                 page=1,                # Get the first page
+                secure=True
+            )[0]
+        # If it's a video, generate a thumbnail image
+        elif file_obj.get("is_video"):
+            file_obj["thumbnail_url"] = cloudinary.utils.cloudinary_url(
+                public_id,
+                resource_type="video",
+                transformation=[{'width': 400, 'crop': 'limit'}],
+                format="jpg",
                 secure=True
             )[0]
 

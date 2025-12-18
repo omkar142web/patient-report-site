@@ -71,6 +71,14 @@
                     alt="Preview of PDF: {{ file_obj.name }}"
                   />
                 </a>
+                {% elif file_obj.is_video %}
+                <span class="badge vid">VID</span>
+                <a href="{{ file_obj.url }}" target="_blank" rel="noopener noreferrer">
+                  <img 
+                    src="{{ file_obj.thumbnail_url }}" 
+                    alt="Video thumbnail for: {{ file_obj.name }}"
+                  />
+                </a>
                 {% else %}
                 <span class="badge img">IMG</span>
                 <img

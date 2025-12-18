@@ -92,7 +92,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function addFiles(files) {
-    const allowedExtensions = ["pdf", "png", "jpg", "jpeg", "gif"];
+    const allowedExtensions = [
+      "pdf",
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "mp4",
+      "mov",
+      "webm",
+    ];
     let validFiles = [];
     let invalidFiles = [];
 

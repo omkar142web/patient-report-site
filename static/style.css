@@ -386,6 +386,7 @@ input:focus {
 }
 .badge.pdf { background: var(--danger); }
 .badge.img { background: var(--accent); color: #000; }
+.badge.vid { background: #9333ea; color: #fff; }
 
 /* Actions */
 .actions {
