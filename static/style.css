@@ -302,6 +302,7 @@ input:focus {
 .patient-files {
     display: none;
     padding-left: 10px; /* Slight indent for files */
+    padding-bottom: 25px;  /* i changed this from 10px to 25px */
 }
 
 .grid {
