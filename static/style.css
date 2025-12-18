@@ -255,11 +255,13 @@ input:focus {
 }
 
 .search-btn:hover { 
-    background: var(--accent-hover); 
+    background: var(--accent-hover);
+    transform: translateY(-1px);
 }
 
 .search-btn:active {
     background: #0ea5e9; /* darker blue on click */
+    transform: translateY(0);
 }
 
 /* Grid & Cards */
