@@ -865,3 +865,20 @@ input:focus {
 .file-count-text {
     white-space: nowrap;  /* keep intact */
 }
+
+
+
+.patient-toggle {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.patient-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
