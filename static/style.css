@@ -737,4 +737,16 @@ input:focus {
 }
 
 
+.patient-header {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.patient-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
 
