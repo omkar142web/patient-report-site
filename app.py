@@ -132,7 +132,7 @@ def logout():
     """Clears the session to log the user out."""
     session.clear()
     flash("You have been logged out successfully.", "success")
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route("/reports")
 @login_required

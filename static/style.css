@@ -85,6 +85,11 @@ a {
     padding-top: 20px;
 }
 
+.sidebar .logout:hover {
+    color: var(--danger);   /* keep red */
+    background: rgba(239, 68, 68, 0.1);
+}
+
 .main { 
     flex: 1; 
     padding: 40px; 
@@ -235,17 +240,25 @@ input:focus {
 } 
 
 .search-btn {
-    /* Inherits from .btn but with overrides */
     width: auto;
     min-width: 120px;
     padding: 14px 32px;
     border-radius: 14px;
-    margin: 0; /* Remove margin from base button style */
+    margin: 0;
+
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #000;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
 }
 
 .search-btn:hover { 
     background: var(--accent-hover); 
-    transform: translateY(-1px); 
+}
+
+.search-btn:active {
+    background: #0ea5e9; /* darker blue on click */
 }
 
 /* Grid & Cards */
