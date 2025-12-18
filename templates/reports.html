@@ -59,7 +59,7 @@
         🎞 Videos: {{ patient_data.video_count }}
       </div>
 
-      <form method="POST" action="{{ url_for('download_zip') }}">
+      <!-- <form method="POST" action="{{ url_for('download_zip') }}">
         <input type="hidden" name="patient" value="{{ patient }}" />
 
         <label><input type="checkbox" name="types" value="pdf" checked /> PDFs</label><br />
@@ -67,7 +67,7 @@
         <label><input type="checkbox" name="types" value="video" checked /> Videos</label><br />
 
         <button type="submit" class="zip-btn">📎 Download ZIP</button>
-      </form>
+      </form> -->
     </div>
   </div>
 </button>
