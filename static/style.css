@@ -763,7 +763,7 @@ input:focus {
 /* --- Compact Patient Info Card --- */
 
 .patient-info-card {
-    width: 180px;              /* was ~260px then 220*/
+    width: 160px;              /* was ~260px then 180*/
     padding: 10px 12px;        /* tighter padding */
 }
 
@@ -911,4 +911,23 @@ input:focus {
         right: auto;
         left: 0;
     }
+}
+
+
+
+/* Center content inside patient info card */
+.patient-info-card {
+    text-align: center;
+}
+
+/* Center stats rows nicely */
+.patient-stats {
+    align-items: center;   /* centers flex children horizontally */
+}
+
+/* Optional: center each stat line icon+text */
+.patient-stats div {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
 }
