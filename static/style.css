@@ -994,3 +994,51 @@ input:focus {
     font-size: 0.8rem;
     color: var(--text-dim);
 }
+
+.patient-toggle {
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    
+    /* REMOVE overflow: hidden; from here */
+    overflow: visible; 
+    
+    position: relative; /* Keep this so the popup knows where to anchor */
+    background: var(--panel);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.patient-name {
+    min-width: 0;
+    white-space: nowrap;
+    
+    /* MOVE overflow: hidden; to here */
+    /* This keeps the text truncating without clipping the popup */
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.patient-info-card {
+    position: absolute;
+    top: 100%;      /* Places it exactly below the button */
+    right: 0;       /* Aligns it to the right edge */
+    width: 160px;
+    z-index: 1000;  /* High number to stay on top of everything */
+    
+    /* Rest of your existing styles */
+    background: rgba(30, 41, 59, 0.98); /* Slightly more solid to see over other buttons */
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(5px);
+    transition: all 0.2s ease;
+}
