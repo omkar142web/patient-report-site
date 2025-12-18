@@ -66,15 +66,19 @@ def index():
     """
     error = None
     if request.method == "POST":
-        patient = request.form.get("patient")
+        patient = request.form.get("patient", "").strip()
         if not patient:
-            return jsonify({"error": "Invalid patient name."}), 400
+            return jsonify({"error": "Patient name is required."}), 400
 
         files = request.files.getlist("report")
         if not files or all(f.filename == '' for f in files):
              return jsonify({"error": "No files selected."}), 400
         
         patient_folder = clean_name(patient)
+        if not patient_folder:
+            # This case handles if the name consists only of invalid characters
+            return jsonify({"error": "Invalid patient name provided."}), 400
+
         current_index = get_next_index(patient_folder)
         uploaded_count = 0
         errors = []
