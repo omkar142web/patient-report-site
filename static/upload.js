@@ -50,9 +50,20 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.disabled = true;
     submitButton.textContent = "Uploading...";
 
-    const formData = new FormData(uploadForm);
-    // Clear existing 'report' fields and append our managed files
-    formData.delete("report");
+    const formData = new FormData();
+
+    // CRITICAL FIX: Get the patient name and append it to FormData
+    const patientName = uploadForm
+      .querySelector('input[name="patient"]')
+      .value.trim();
+    if (!patientName) {
+      showToast("Patient name is required.", "error");
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+      return;
+    }
+    formData.append("patient", patientName);
+
     selectedFiles.forEach((file) => {
       formData.append("report", file);
     });
