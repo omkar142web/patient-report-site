@@ -193,7 +193,8 @@ def reports():
             "url": res["secure_url"],
             "public_id": public_id,
             "is_pdf": res["format"] == "pdf",
-            "is_video": res["resource_type"] == "video"
+            "is_video": res["resource_type"] == "video",
+            "resource_type": res["resource_type"]
         }
 
         # If it's a PDF, generate a thumbnail URL for the first page
@@ -230,7 +231,11 @@ def delete_file():
     public_id = request.form.get("public_id")
     if public_id:
         # Deleting requires the public_id
-        cloudinary.uploader.destroy(public_id)
+        # We must also specify the resource_type for videos
+        resource_type = request.form.get("resource_type", "image")
+        cloudinary.uploader.destroy(
+            public_id, resource_type=resource_type
+        )
         flash(f"Report was deleted successfully.", "success")
     else:
         flash("Could not delete report: missing ID.", "error")
