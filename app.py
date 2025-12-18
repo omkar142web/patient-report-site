@@ -171,10 +171,17 @@ def reports():
             res["created_at"], "%Y-%m-%dT%H:%M:%SZ"
         ).strftime('%b %d, %Y')
 
+        url = res["secure_url"]
+        # FIX: PDFs must be served via the raw delivery type, not image.
+        if res["format"] == "pdf":
+            # The thumbnail generation correctly uses the image endpoint,
+            # but the direct link to the file must use raw.
+            url = url.replace("/image/upload/", "/raw/upload/")
+
         file_obj = {
             "name": f"{public_id.split('/')[-1]}.{res['format']}",
             "date": upload_date,
-            "url": res["secure_url"],
+            "url": url,
             "public_id": public_id,
             "is_pdf": res["format"] == "pdf"
         }
