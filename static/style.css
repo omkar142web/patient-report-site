@@ -14,7 +14,6 @@
 
 * { 
     box-sizing: border-box; 
-    transition: all 0.2s ease; 
 }
 
 body {
@@ -252,7 +251,11 @@ input:focus {
     font-weight: 700;
     border: none;
     cursor: pointer;
+
+    /* ✅ transition ONLY what changes */
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
+
 
 .search-btn:hover { 
     background: var(--accent-hover);
