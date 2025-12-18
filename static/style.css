@@ -763,7 +763,7 @@ input:focus {
 /* --- Compact Patient Info Card --- */
 
 .patient-info-card {
-    width: 220px;              /* was ~260px */
+    width: 180px;              /* was ~260px then 220*/
     padding: 10px 12px;        /* tighter padding */
 }
 
@@ -828,3 +828,40 @@ input:focus {
     white-space: nowrap;      /* keep "(n files)" intact */
 }
 
+
+
+
+
+
+/* =========================================================
+   FORCE truncation for patient names on ALL screen sizes
+   ========================================================= */
+
+.patient-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;          /* constrain button width */
+    overflow: hidden;     /* CRITICAL for mobile */
+}
+
+/* LEFT: patient name */
+.patient-name {
+    flex: 1 1 auto;       /* allow shrink */
+    min-width: 0;         /* REQUIRED for ellipsis */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* RIGHT: (n files) + info icon */
+.patient-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;       /* NEVER shrink */
+}
+
+.file-count-text {
+    white-space: nowrap;  /* keep intact */
+}
