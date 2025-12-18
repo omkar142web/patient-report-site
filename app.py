@@ -154,7 +154,8 @@ def reports():
     resources = cloudinary.api.resources(
         type="upload", 
         max_results=500,
-        expression=expression
+        expression=expression,
+        with_field="folder"
     )
         
     for res in resources.get("resources", []):
