@@ -784,3 +784,13 @@ input:focus {
 .info-icon {
     font-size: 12px;           /* smaller ⓘ icon */
 }
+
+
+
+/* --- Truncate long patient name to one line --- */
+.patient-header {
+    white-space: nowrap;        /* stay on one line */
+    overflow: hidden;           /* hide extra text */
+    text-overflow: ellipsis;    /* show ... if needed */
+    max-width: 100%;
+}
