@@ -140,26 +140,24 @@ def reports():
         # The patient name is the folder name
         patient_name = res.get("folder", "Uncategorized")
 
-        file_details = []
-        for res in resources.get("resources", []):
-            # Cloudinary's created_at is in ISO 8601 format, e.g., '2023-10-27T10:30:00Z'
-            upload_date = datetime.strptime(res["created_at"], "%Y-%m-%dT%H:%M:%SZ").strftime('%b %d, %Y')
-            
-            # Construct the original filename from public_id and format
-            original_filename = f"{res['public_id'].split('/')[-1]}.{res['format']}"
-            
-            file_details.append({
-                'name': original_filename,
-                'date': upload_date,
-                'url': res['secure_url'],
-                'public_id': res['public_id'],
-                'is_pdf': res['resource_type'] == 'image' and res['format'] == 'pdf'
-            })
+        upload_date = datetime.strptime(
+            res["created_at"], "%Y-%m-%dT%H:%M:%SZ"
+        ).strftime('%b %d, %Y')
+
+        original_filename = f"{res['public_id'].split('/')[-1]}.{res['format']}"
+
+        file_obj = {
+            'name': original_filename,
+            'date': upload_date,
+            'url': res['secure_url'],
+            'public_id': res['public_id'],
+            'is_pdf': res['resource_type'] == 'image' and res['format'] == 'pdf'
+        }
 
         # Group files by patient
         if patient_name not in data:
             data[patient_name] = []
-        data[patient_name].append(file_details[0]) # Since we iterate one by one
+        data[patient_name].append(file_obj)
 
     # Sort files within each patient group by date
     for patient in data:
