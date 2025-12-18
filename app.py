@@ -159,8 +159,6 @@ def reports():
     )
         
     for res in resources.get("resources", []):
-        # The patient name is the folder name
-        patient_name = res.get("folder", "Uncategorized")
         # The patient name is the folder name from Cloudinary.
         # CRITICAL: If a file has no folder, it's a root-level file. Skip it.
         patient_name = res.get("folder")
