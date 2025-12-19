@@ -1069,4 +1069,20 @@ body {
 
 
 
+/* Search highlight */
+mark {
+    background: rgba(56, 189, 248, 0.35);
+    color: #fff;
+    padding: 0 2px;
+    border-radius: 4px;
+}
+
+/* No result message (search-specific) */
+.search-no-result {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1rem;
+    color: var(--text-dim);
+    display: none;
+}
 

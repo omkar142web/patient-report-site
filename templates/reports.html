@@ -37,6 +37,11 @@
           <button type="submit" class="search-btn">Search</button>
         </form>
 
+        <div id="searchNoResult" class="search-no-result">
+        ❌ No file found!
+        </div>
+
+
         {% if not data %}
         <div class="no-data">
           <p>No patients found.</p>
@@ -214,6 +219,109 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("search");
+  const patientSections = document.querySelectorAll(".patient-section");
+  const noResult = document.getElementById("searchNoResult");
+
+  function removeHighlights(el) {
+  el.querySelectorAll("mark").forEach(m => {
+    m.replaceWith(m.textContent);
+  });
+}
+
+
+  function highlight(el, term) {
+    const regex = new RegExp(`(${term})`, "gi");
+    el.innerHTML = el.textContent.replace(regex, "<mark>$1</mark>");
+  }
+
+  function liveSearch() {
+    const query = searchInput.value.trim().toLowerCase();
+    let anyMatch = false;
+
+    patientSections.forEach(section => {
+    if (!query) {
+  section.querySelectorAll(".card").forEach(card => {
+    card.style.display = "";
+  });
+}
+
+      const patientNameEl = section.querySelector(".patient-name");
+      const patientNameText = patientNameEl.textContent;
+      let patientMatch = false;
+
+      removeHighlights(patientNameEl);
+
+      // Match patient name
+      if (query && patientNameText.toLowerCase().includes(query)) {
+        highlight(patientNameEl, query);
+        patientMatch = true;
+      }
+
+      const fileCards = section.querySelectorAll(".card");
+      let fileMatchFound = false;
+
+      fileCards.forEach(card => {
+        const fileNameEl = card.querySelector(".file-name");
+        const fileNameText = fileNameEl.textContent;
+
+        removeHighlights(fileNameEl);
+
+        if (!query) {
+          card.style.display = "";
+          return;
+        }
+
+        if (fileNameText.toLowerCase().includes(query)) {
+          highlight(fileNameEl, query);
+          card.style.display = "";
+          fileMatchFound = true;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      const filesContainer = section.querySelector(".patient-files");
+const toggleBtn = section.querySelector(".patient-toggle");
+
+// Show section if patient OR any file matches
+if (!query || patientMatch || fileMatchFound) {
+  section.style.display = "";
+  anyMatch = true;
+
+  // 🔥 AUTO-OPEN files when searching
+  if (query && (patientMatch || fileMatchFound)) {
+    filesContainer.style.display = "block";
+    toggleBtn.classList.add("active");
+  }
+
+  // 🔁 Reset when search cleared
+  if (!query) {
+    filesContainer.style.display = "none";
+    toggleBtn.classList.remove("active");
+  }
+} else {
+  section.style.display = "none";
+}
+
+
+    });
+
+    noResult.style.display = anyMatch || !query ? "none" : "block";
+  }
+
+  // 🔥 LIVE SEARCH (typing + deleting)
+  searchInput.addEventListener("input", liveSearch);
+
+  // Optional: keep button usable
+  document.querySelector(".search-box").addEventListener("submit", e => {
+    e.preventDefault();
+    liveSearch();
+  });
+});
+</script>
 
 
 
