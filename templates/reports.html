@@ -193,12 +193,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // CLICK OUTSIDE → close everything
+  
   document.addEventListener("click", () => {
-    document.querySelectorAll(".patient-info-wrapper.open").forEach(wrapper => {
+    document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
       wrapper.classList.remove("open");
-      wrapper._openedByClick = false;
     });
   });
+
 });
 </script>
 
