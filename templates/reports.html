@@ -164,11 +164,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let openedByClick = false;
     const icon = wrapper.querySelector(".info-icon");
 
-    // CLICK → toggle & lock
+    // CLICK → toggle (open / close)
     icon.addEventListener("click", (e) => {
       e.stopPropagation();
-      openedByClick = true;
-      wrapper.classList.add("open");
+
+      if (wrapper.classList.contains("open")) {
+        wrapper.classList.remove("open");
+        openedByClick = false;
+      } else {
+        wrapper.classList.add("open");
+        openedByClick = true;
+      }
     });
 
     // HOVER (desktop only) → temporary open
@@ -178,21 +184,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // HOVER OUT → close if not clicked
+    // HOVER OUT → close if not click-opened
     wrapper.addEventListener("mouseleave", () => {
       if (!openedByClick) {
         wrapper.classList.remove("open");
       }
     });
+  });
 
-    // CLICK OUTSIDE → close & unlock
-    document.addEventListener("click", () => {
-      openedByClick = false;
+  // CLICK OUTSIDE → close everything
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".patient-info-wrapper.open").forEach(wrapper => {
       wrapper.classList.remove("open");
+      wrapper._openedByClick = false;
     });
   });
 });
 </script>
+
 
 
 
