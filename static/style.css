@@ -683,17 +683,59 @@ input:focus {
 
 
 .zip-btn {
-    margin-top: 10px;
-    width: 100%;
-    padding: 8px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 6px 6px 6px 18px;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #ff8a00, #ff2d95);
+  border: none;
+
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+
+  color: #0f172a;
+  text-decoration: none;
+  cursor: pointer;
+
+  box-shadow: 0 8px 20px rgba(255, 45, 149, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Hover */
+.zip-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(255, 45, 149, 0.5);
+}
 
+/* Press */
+.zip-btn:active {
+  transform: scale(0.98);
+}
+
+/* Fake circular icon bubble using ::after */
+.zip-btn::after {
+  content: "⬇";
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9);
+  color: #ff2d95;
+
+  font-size: 16px;
+}
 
 
 
