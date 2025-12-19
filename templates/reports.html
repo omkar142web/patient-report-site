@@ -364,6 +364,21 @@ if (query && anyMatch) {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const firstSection = document.querySelector(".patient-section");
+
+  if (!firstSection) return;
+
+  const filesContainer = firstSection.querySelector(".patient-files");
+  const toggleBtn = firstSection.querySelector(".patient-toggle");
+
+  if (filesContainer && toggleBtn) {
+    filesContainer.style.display = "block";
+    toggleBtn.classList.add("active");
+  }
+});
+</script>
 
 
 
