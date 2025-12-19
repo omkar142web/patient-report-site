@@ -5,6 +5,12 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 import re
+
+import io
+import zipfile
+import requests
+from flask import send_file
+
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -257,6 +263,71 @@ def delete_file():
         flash("Could not delete report: missing ID.", "error")
         
     return redirect(url_for('reports'))
+
+
+
+
+
+
+
+@app.route("/download-patient/<patient>")
+@login_required
+def download_patient_zip(patient):
+    """
+    Download ALL files of a patient as a ZIP
+    """
+    patient = clean_name(patient)
+
+    # Get all files for this patient from Cloudinary
+    result_img = cloudinary.api.resources(
+        type="upload",
+        resource_type="image",
+        prefix=f"{patient}/",
+        max_results=500
+    )
+
+    result_vid = cloudinary.api.resources(
+        type="upload",
+        resource_type="video",
+        prefix=f"{patient}/",
+        max_results=500
+    )
+
+    all_files = result_img.get("resources", []) + result_vid.get("resources", [])
+
+    if not all_files:
+        flash("No files found for this patient.", "error")
+        return redirect(url_for("reports"))
+
+    zip_buffer = io.BytesIO()
+
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for file in all_files:
+            file_url = file["secure_url"]
+            filename = f"{file['public_id'].split('/')[-1]}.{file['format']}"
+
+            try:
+                response = requests.get(file_url, timeout=20)
+                response.raise_for_status()
+                zipf.writestr(filename, response.content)
+            except Exception:
+                continue
+
+    zip_buffer.seek(0)
+
+    return send_file(
+        zip_buffer,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=f"{patient}_reports.zip"
+    )
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # The development server is not for production. A WSGI server like Gunicorn will run the app.

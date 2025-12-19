@@ -60,10 +60,20 @@
       <div class="patient-header">👤 {{ patient }}</div>
 
       <div class="patient-stats">
-        <div>📃 PDFs : {{ patient_data.pdf_count }}</div>
-        <div>🖼️ Images : {{ patient_data.image_count }}</div>
-        <div>🎞️ Videos : {{ patient_data.video_count }}</div>
+        <div>📃 PDFs : {{ patient_data.pdf_count }}&nbsp;&nbsp;</div>
+        <div>🖼️ Images : {{ patient_data.image_count }}&nbsp;&nbsp;</div>
+        <div>🎞️ Videos : {{ patient_data.video_count }}&nbsp;&nbsp;</div>
       </div>
+
+        <!-- ZIP BUTTON -->
+      <a
+  href="{{ url_for('download_patient_zip', patient=patient) }}"
+  class="zip-btn"
+  style="margin-top: 10px; text-align: center;"
+>
+  ⬇ Download ZIP
+</a>
+
 
     </div>
   </div>
