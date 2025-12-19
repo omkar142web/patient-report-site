@@ -37,6 +37,9 @@
           <button type="submit" class="search-btn">Search</button>
         </form>
 
+        <div id="searchCounter" class="search-counter"></div>
+
+
         <div id="searchNoResult" class="search-no-result">
         ❌ No file found!
         </div>
@@ -250,7 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function liveSearch() {
     const query = searchInput.value.trim().toLowerCase();
     let anyMatch = false;
-
+    let matchCount = 0;
+    let firstOpened = false;
     const sectionsArray = Array.from(patientSections);
 
 // Rank + sort
@@ -305,26 +309,41 @@ sectionsArray.forEach(section => {
   const toggleBtn = section.querySelector(".patient-toggle");
 
   if (!query || patientMatch || fileMatchFound) {
-    section.style.display = "";
-    anyMatch = true;
+  section.style.display = "";
+  anyMatch = true;
+  matchCount++;
 
-
-    if (query && (patientMatch || fileMatchFound)) {
-      filesContainer.style.display = "block";
-      toggleBtn.classList.add("active");
-    }
-
-    if (!query) {
-      filesContainer.style.display = "none";
-      toggleBtn.classList.remove("active");
-    }
+  if (query && !firstOpened) {
+    // 🔥 Open ONLY the top-ranked folder
+    filesContainer.style.display = "block";
+    toggleBtn.classList.add("active");
+    firstOpened = true;
   } else {
-    section.style.display = "none";
+    // Keep others closed
+    filesContainer.style.display = "none";
+    toggleBtn.classList.remove("active");
   }
+
+  if (!query) {
+    filesContainer.style.display = "none";
+    toggleBtn.classList.remove("active");
+  }
+} else {
+  section.style.display = "none";
+}
+
 });
 
 
     noResult.style.display = anyMatch || !query ? "none" : "block";
+
+const counter = document.getElementById("searchCounter");
+if (query && anyMatch) {
+  counter.textContent = `Showing ${matchCount} result${matchCount > 1 ? "s" : ""}`;
+} else {
+  counter.textContent = "";
+}
+
   }
 
   // 🔥 LIVE SEARCH (typing + deleting)

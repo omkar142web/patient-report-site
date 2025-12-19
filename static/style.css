@@ -1086,3 +1086,10 @@ mark {
     display: none;
 }
 
+.search-counter {
+  margin: 8px auto 0;
+  max-width: 800px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-align: right;
+}
