@@ -764,11 +764,7 @@ input:focus {
 
 
 /* Show popup */
-/* .patient-info-wrapper.open .patient-info-card {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-} */
+
 
 /* -------------------------------
    Center popup content nicely
@@ -843,10 +839,23 @@ body {
     border: 1px solid rgba(255,255,255,0.05);
 
     cursor: pointer;
+
+    margin-bottom: 14px;   /* try 12–18px */
+
+    transition: transform 0.15s ease;
 }
 
 /* Patient name (ellipsis works 100%) */
 .patient-name {
+    color: #e5e7eb; /* soft white */
+
+    /* color: var(--text-main);   */   /* bright white */
+
+    /* OR try these alternatives */
+    /* color: #e5e7eb; */         /* soft white */
+    /* color: var(--accent); */   /* blue highlight */
+    /* color: #cbd5f5; */         /* cool gray-blue */
+
     min-width: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -936,4 +945,13 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+
+.patient-toggle:hover .patient-name {
+    color: var(--accent);
+}
+
+.patient-toggle:hover {
+    transform: translateY(-2px);
 }
