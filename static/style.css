@@ -957,8 +957,19 @@ body {
     color: var(--accent);
 }
 
+/* Hover effect (desktop only) */
 @media (hover: hover) {
-    .patient-toggle:hover {
+    .patient-toggle:hover:not(:has(.patient-info-wrapper.open)) {
         transform: translateY(-2px);
     }
 }
+
+/* Prevent hover transform when popup is open */
+.patient-toggle:has(.patient-info-wrapper.open) {
+    transform: none !important;
+    z-index: 50;
+}
+
+
+
+
