@@ -164,16 +164,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let openedByClick = false;
     const icon = wrapper.querySelector(".info-icon");
 
-    // CLICK → toggle (open / close)
+    // CLICK → toggle + lock
     icon.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      if (wrapper.classList.contains("open")) {
-        wrapper.classList.remove("open");
-        openedByClick = false;
-      } else {
+      if (!openedByClick) {
+        // first click always LOCKS it open
         wrapper.classList.add("open");
         openedByClick = true;
+      } else {
+        // second click closes
+        wrapper.classList.remove("open");
+        openedByClick = false;
       }
     });
 
@@ -184,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // HOVER OUT → close if not click-opened
+    // HOVER OUT → close only if not locked by click
     wrapper.addEventListener("mouseleave", () => {
       if (!openedByClick) {
         wrapper.classList.remove("open");
@@ -192,16 +194,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // CLICK OUTSIDE → close everything
-  
+  // CLICK OUTSIDE → close all
   document.addEventListener("click", () => {
     document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
       wrapper.classList.remove("open");
+      wrapper._openedByClick = false;
     });
   });
-
 });
 </script>
+
 
 
 
