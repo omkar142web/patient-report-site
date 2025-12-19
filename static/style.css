@@ -296,22 +296,7 @@ input:focus {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* .patient-toggle {
-    width: 100%;
-    background: var(--panel);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 15px 20px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-} */
+
 
 .patient-files {
     display: none;
@@ -680,11 +665,7 @@ input:focus {
 
 
 
-/* 
-.patient-info-wrapper {
-    position: relative;
-    display: inline-block;
-} */
+
 
 .info-icon {
     cursor: pointer;
@@ -699,31 +680,7 @@ input:focus {
     background: rgba(255,255,255,0.05);
 }
 
-.patient-info-card {
-    position: absolute;
-    top: 26px;
-    right: 0;
-    width: 260px;
-    background: rgba(30, 41, 59, 0.95);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 14px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    z-index: 50;
 
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-6px);
-    transition: all 0.2s ease;
-}
-
-/* .patient-info-wrapper:not(.open):hover .patient-info-card,
-.patient-info-wrapper.open .patient-info-card {
-
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-} */
 
 .zip-btn {
     margin-top: 10px;
@@ -737,49 +694,18 @@ input:focus {
 }
 
 
-.patient-header {
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.patient-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.9rem;
-    color: var(--text-dim);
-}
 
 
 
 
 
-.file-count-text {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin-right: 6px;
-}
 
-/* --- Compact Patient Info Card --- */
 
-.patient-info-card {
-    width: 160px;              /* was ~260px then 180*/
-    padding: 10px 12px;        /* tighter padding */
-}
 
-.patient-header {
-    font-size: 0.9rem;         /* smaller title */
-    margin-bottom: 6px;
-}
 
-.patient-stats {
-    font-size: 0.8rem;         /* smaller text */
-    gap: 3px;                  /* less vertical spacing */
-}
 
-.patient-stats div {
-    line-height: 1.2;          /* tighter lines */
-}
+
+
 
 .info-icon {
     font-size: 12px;           /* smaller ⓘ icon */
@@ -797,38 +723,6 @@ input:focus {
 
 
 
-/* =========================================================
-   Patient list row — truncate NAME only, keep right side intact
-   ========================================================= */
-/* 
-.patient-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-} */
-
-/* Patient name (LEFT) */
-.patient-name {
-    flex: 1;                  /* take remaining space */
-    min-width: 0;             /* REQUIRED for ellipsis */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Right side: (n files) + ⓘ
-.patient-info-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;           /* NEVER shrink 
-} */
-
-.file-count-text {
-    white-space: nowrap;      /* keep "(n files)" intact */
-}
-
-
 
 
 
@@ -837,211 +731,21 @@ input:focus {
    FORCE truncation for patient names on ALL screen sizes
    ========================================================= */
 
-/* .patient-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;   }       /* constrain button width */
-
-
-/* LEFT: patient name */
-.patient-name {
-    flex: 1 1 auto;       /* allow shrink */
-    min-width: 0;         /* REQUIRED for ellipsis */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* RIGHT: (n files) + info icon */
-/* .patient-info-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;       /* NEVER shrink 
-} */
-
-.file-count-text {
-    white-space: nowrap;  /* keep intact */
-}
 
 
 
-/* .patient-toggle {
-    display: flex;
-    width: 100%;
-    min-width: 0;
-} */
-
-.patient-name {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* .patient-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    width: 100%;
-    min-width: 0;        CRITICAL 
-
-    justify-content: flex-start; } ⛔ NOT space-between */
- 
-
-.patient-name {
-    flex: 1 1 auto;     /* allow shrinking */
-    min-width: 0;       /* REQUIRED for ellipsis */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* .patient-info-wrapper {
-    flex-shrink: 0;     /* keep right side fixed 
-    position: relative;
-} */
-
-
-@media (max-width: 480px) {
-    .patient-info-card {
-        right: auto;
-        left: 0;
-    }
-}
 
 
 
-/* Center content inside patient info card */
-.patient-info-card {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers the header and the stats block */
-}
-
-/* Center stats rows nicely */
-.patient-stats {
-    display: inline-flex; /* Shrink to fit content */
-    flex-direction: column;
-    align-items: flex-start; /* Keep icons aligned in a vertical line */
-    gap: 4px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin: 0 auto; /* Extra insurance for centering */
-}
-
-/* Ensure each stat line has a consistent layout */
-.patient-stats div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px; /* Consistent space between icon and text */
-    width: 100%;
-}
-
-/* Optional: Give icons a fixed width so the text starts at the same spot */
-.patient-stats div span:first-child, 
-.patient-stats div i {
-    width: 18px; 
-    text-align: center;
-}
 
 /* =========================================================
    FORCE truncation for patient names - FIX
    ========================================================= */
 
-/* .patient-toggle {
-    display: grid;
-    /* Column 1: Flexible name, Column 2: Fixed-width info stuff 
-    grid-template-columns: 1fr auto; 
-    align-items: center;
-    gap: 12px;
 
-    width: 100%;
-    max-width: 100%; /* Prevents growing beyond parent 
-    box-sizing: border-box;
-    overflow: hidden; /* Contains children 
-    
-    /* Reset existing button styles to ensure consistency 
-    background: var(--panel);
-    padding: 15px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
-} */
 
-.patient-name {
-    min-width: 0;           /* CRITICAL: Allows grid item to shrink below content size */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-}
 
-/* .patient-info-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;         /* Prevents the (n files) from disappearing 
-    justify-content: flex-end;
-} */
 
-.file-count-text {
-    white-space: nowrap;    /* Prevents "(2" and "files)" from splitting into two lines */
-    font-size: 0.8rem;
-    color: var(--text-dim);
-}
-
-/* .patient-toggle {
-    display: grid;
-    grid-template-columns: 1fr auto; 
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    
-    /* REMOVE overflow: hidden; from here 
-    overflow: visible; 
-    
-    position: relative; /* Keep this so the popup knows where to anchor 
-    background: var(--panel);
-    padding: 15px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
-} */
-
-.patient-name {
-    min-width: 0;
-    white-space: nowrap;
-    
-    /* MOVE overflow: hidden; to here */
-    /* This keeps the text truncating without clipping the popup */
-    overflow: hidden; 
-    text-overflow: ellipsis;
-    text-align: left;
-}
-
-.patient-info-card {
-    position: absolute;
-    top: 100%;      /* Places it exactly below the button */
-    right: 0;       /* Aligns it to the right edge */
-    width: 160px;
-    z-index: 1000;  /* High number to stay on top of everything */
-    
-    /* Rest of your existing styles */
-    background: rgba(30, 41, 59, 0.98); /* Slightly more solid to see over other buttons */
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 10px 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(5px);
-    transition: all 0.2s ease;
-}
 
 
 
@@ -1049,75 +753,15 @@ input:focus {
    FINAL FIX — Patient row truncation + popup + mobile safety
    ========================================================= */
 
-/* -------------------------------
-   Patient toggle row (GRID-based)
-   ------------------------------- */
-/* .patient-toggle {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
 
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
 
-    /* keep your existing look 
-    background: var(--panel);
-    padding: clamp(12px, 3vw, 16px);
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
-} */
 
-/* Patient name — THIS enables ellipsis */
-.patient-name {
-    min-width: 0;              /* REQUIRED */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
-/* Right side: (n files) + info icon */
-/* .patient-info-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    position: relative;
-} */
-
-.file-count-text {
-    white-space: nowrap;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-}
 
 /* -------------------------------
    Info popup (safe + centered)
    ------------------------------- */
-.patient-info-card {
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
 
-    width: min(180px, 80vw);
-    z-index: 1000;
-
-    background: rgba(30, 41, 59, 0.98);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 10px 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(6px);
-    transition: all 0.2s ease;
-}
 
 /* Show popup */
 /* .patient-info-wrapper.open .patient-info-card {
@@ -1129,39 +773,12 @@ input:focus {
 /* -------------------------------
    Center popup content nicely
    ------------------------------- */
-.patient-info-card .patient-header {
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
 
-.patient-stats {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin: 0 auto;
-}
-
-.patient-stats div {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 /* -------------------------------
    Mobile edge protection
    ------------------------------- */
-@media (max-width: 480px) {
-    .patient-info-card {
-        right: auto;
-        left: 0;
-    }
-}
+
 
 /* =========================================================
    Header / Sidebar mobile overhang fix (responsive)
