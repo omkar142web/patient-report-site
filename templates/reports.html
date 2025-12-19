@@ -160,21 +160,40 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".info-icon").forEach(icon => {
-    icon.addEventListener("click", e => {
+  document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
+    let openedByClick = false;
+    const icon = wrapper.querySelector(".info-icon");
+
+    // CLICK → toggle & lock
+    icon.addEventListener("click", (e) => {
       e.stopPropagation();
-      const wrapper = icon.closest(".patient-info-wrapper");
+      openedByClick = !wrapper.classList.contains("open");
       wrapper.classList.toggle("open");
     });
-  });
 
-  document.addEventListener("click", () => {
-    document
-      .querySelectorAll(".patient-info-wrapper.open")
-      .forEach(el => el.classList.remove("open"));
+    // HOVER (desktop only) → temporary open
+    wrapper.addEventListener("mouseenter", () => {
+      if (!openedByClick && window.matchMedia("(hover: hover)").matches) {
+        wrapper.classList.add("open");
+      }
+    });
+
+    // HOVER OUT → close if not clicked
+    wrapper.addEventListener("mouseleave", () => {
+      if (!openedByClick) {
+        wrapper.classList.remove("open");
+      }
+    });
+
+    // CLICK OUTSIDE → close & unlock
+    document.addEventListener("click", () => {
+      openedByClick = false;
+      wrapper.classList.remove("open");
+    });
   });
 });
 </script>
+
 
 
   </body>
