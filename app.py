@@ -42,6 +42,11 @@ def login_required(f):
     return decorated_function
 
 def clean_name(name):
+
+
+    name = name.strip().upper()   # 👈 convert to UPPERCASE
+
+
     """
     Sanitizes a string to be used as a patient name or filename.
     Replaces any character that is not a letter, number, or underscore with an underscore.
