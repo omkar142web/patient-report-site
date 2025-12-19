@@ -198,8 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", () => {
     document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
       wrapper.classList.remove("open");
-      wrapper._openedByClick = false;
     });
+
+  // reset ALL locks
+  document
+    .querySelectorAll(".patient-info-wrapper")
+    .forEach(() => openedByClick = false);
   });
 });
 </script>
