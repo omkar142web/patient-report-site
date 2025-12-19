@@ -80,5 +80,25 @@
       showToast("{{ message }}", "{{ category }}");
     </script>
     {% endfor %} {% endif %} {% endwith %}
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const nameInput = document.querySelector('input[name="patient"]');
+  const form = document.getElementById("upload-form");
+
+  if (!nameInput || !form) return;
+
+  nameInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // stop accidental reload
+      form.requestSubmit(); // acts exactly like clicking Upload
+    }
+  });
+});
+</script>
+
+
+
   </body>
 </html>
