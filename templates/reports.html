@@ -167,8 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // CLICK → toggle & lock
     icon.addEventListener("click", (e) => {
       e.stopPropagation();
-      openedByClick = !wrapper.classList.contains("open");
-      wrapper.classList.toggle("open");
+      openedByClick = true;
+      wrapper.classList.add("open");
     });
 
     // HOVER (desktop only) → temporary open
