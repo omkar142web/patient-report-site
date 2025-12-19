@@ -734,12 +734,12 @@ input:focus {
     content: "🔻"; /* cleaner than ⬇ */
 
     position: absolute;
-    left: 0.1px;
+    left: 0.5px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-51.2%);
 
-    width: 23px;
-    height: 23px;
+    width: 24px;
+    height: 24px;
 
     display: flex;
     align-items: center;
