@@ -55,7 +55,10 @@
         <div class="no-data">
           <p>No patients found.</p>
         </div>
-        {% endif %} {% for patient, patient_data in data.items() %}
+        {% endif %} 
+
+        <div id="patientsContainer"> 
+          {% for patient, patient_data in data.items() %}
 
         <section class="patient-section">
           <button class="patient-toggle" onclick="togglePatient('{{ loop.index }}')">
@@ -157,9 +160,12 @@ Download
             </div>
           </div>
         </section>
-        {% endfor %}
-      </div>
-    </div>
+                {% endfor %}
+      </div>   <!-- #patientsContainer -->
+    </div>     <!-- .main -->
+  </div>       <!-- .layout -->
+
+      
 
     <script>
       function togglePatient(id) {
@@ -364,21 +370,62 @@ if (query && anyMatch) {
 });
 </script>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const firstSection = document.querySelector(".patient-section");
+  const container = document.getElementById("patientsContainer");
+  const sections = Array.from(container.querySelectorAll(".patient-section"));
 
-  if (!firstSection) return;
+  function parseDate(text) {
+    // "Uploaded on: 2024-01-10 14:22"
+    return new Date(text.replace("Uploaded on:", "").trim());
+  }
 
-  const filesContainer = firstSection.querySelector(".patient-files");
-  const toggleBtn = firstSection.querySelector(".patient-toggle");
+  function getLatestFileDate(section) {
+    const dateEls = section.querySelectorAll(".file-date");
+    let latest = new Date(0);
 
-  if (filesContainer && toggleBtn) {
-    filesContainer.style.display = "block";
-    toggleBtn.classList.add("active");
+    dateEls.forEach(el => {
+      const d = parseDate(el.textContent);
+      if (!isNaN(d) && d > latest) {
+        latest = d;
+      }
+    });
+
+    return latest;
+  }
+
+  // 🔥 Sort by most recent upload
+  sections.sort((a, b) => {
+    return getLatestFileDate(b) - getLatestFileDate(a);
+  });
+
+  // Re-append cleanly
+  sections.forEach(section => {
+    container.appendChild(section);
+
+    const files = section.querySelector(".patient-files");
+    const btn = section.querySelector(".patient-toggle");
+
+    if (files && btn) {
+      files.style.display = "none";
+      btn.classList.remove("active");
+    }
+  });
+
+  // 🔥 Auto-open newest folder
+  if (sections[0]) {
+    const files = sections[0].querySelector(".patient-files");
+    const btn = sections[0].querySelector(".patient-toggle");
+
+    if (files && btn) {
+      files.style.display = "block";
+      btn.classList.add("active");
+    }
   }
 });
 </script>
+
 
 
 
