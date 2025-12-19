@@ -237,77 +237,92 @@ document.addEventListener("DOMContentLoaded", () => {
     el.innerHTML = el.textContent.replace(regex, "<mark>$1</mark>");
   }
 
+  function getMatchScore(name, query) {
+  const n = name.toLowerCase();
+
+  if (n === query) return 3;        // exact match
+  if (n.startsWith(query)) return 2; // prefix match (icons for "i")
+  if (n.includes(query)) return 1;   // contains
+  return 0;
+}
+
+
   function liveSearch() {
     const query = searchInput.value.trim().toLowerCase();
     let anyMatch = false;
 
-    patientSections.forEach(section => {
+    const sectionsArray = Array.from(patientSections);
+
+// Rank + sort
+sectionsArray.sort((a, b) => {
+  if (!query) return 0;
+
+  const nameA = a.querySelector(".patient-name").textContent.replace("👤", "").trim();
+  const nameB = b.querySelector(".patient-name").textContent.replace("👤", "").trim();
+
+  return getMatchScore(nameB, query) - getMatchScore(nameA, query);
+});
+
+// Re-append in ranked order
+sectionsArray.forEach(section => {
+  section.parentElement.appendChild(section);
+
+  const patientNameEl = section.querySelector(".patient-name");
+  const patientNameText = patientNameEl.textContent;
+  let patientMatch = false;
+
+  removeHighlights(patientNameEl);
+
+  if (query && patientNameText.toLowerCase().includes(query)) {
+    highlight(patientNameEl, query);
+    patientMatch = true;
+  }
+
+  const fileCards = section.querySelectorAll(".card");
+  let fileMatchFound = false;
+
+  fileCards.forEach(card => {
+    const fileNameEl = card.querySelector(".file-name");
+    const fileNameText = fileNameEl.textContent;
+
+    removeHighlights(fileNameEl);
+
     if (!query) {
-  section.querySelectorAll(".card").forEach(card => {
-    card.style.display = "";
+      card.style.display = "";
+      return;
+    }
+
+    if (fileNameText.toLowerCase().includes(query)) {
+      highlight(fileNameEl, query);
+      card.style.display = "";
+      fileMatchFound = true;
+    } else {
+      card.style.display = "none";
+    }
   });
-}
 
-      const patientNameEl = section.querySelector(".patient-name");
-      const patientNameText = patientNameEl.textContent;
-      let patientMatch = false;
+  const filesContainer = section.querySelector(".patient-files");
+  const toggleBtn = section.querySelector(".patient-toggle");
 
-      removeHighlights(patientNameEl);
+  if (!query || patientMatch || fileMatchFound) {
+    section.style.display = "";
+    anyMatch = true;
 
-      // Match patient name
-      if (query && patientNameText.toLowerCase().includes(query)) {
-        highlight(patientNameEl, query);
-        patientMatch = true;
-      }
 
-      const fileCards = section.querySelectorAll(".card");
-      let fileMatchFound = false;
+    if (query && (patientMatch || fileMatchFound)) {
+      filesContainer.style.display = "block";
+      toggleBtn.classList.add("active");
+    }
 
-      fileCards.forEach(card => {
-        const fileNameEl = card.querySelector(".file-name");
-        const fileNameText = fileNameEl.textContent;
-
-        removeHighlights(fileNameEl);
-
-        if (!query) {
-          card.style.display = "";
-          return;
-        }
-
-        if (fileNameText.toLowerCase().includes(query)) {
-          highlight(fileNameEl, query);
-          card.style.display = "";
-          fileMatchFound = true;
-        } else {
-          card.style.display = "none";
-        }
-      });
-
-      const filesContainer = section.querySelector(".patient-files");
-const toggleBtn = section.querySelector(".patient-toggle");
-
-// Show section if patient OR any file matches
-if (!query || patientMatch || fileMatchFound) {
-  section.style.display = "";
-  anyMatch = true;
-
-  // 🔥 AUTO-OPEN files when searching
-  if (query && (patientMatch || fileMatchFound)) {
-    filesContainer.style.display = "block";
-    toggleBtn.classList.add("active");
+    if (!query) {
+      filesContainer.style.display = "none";
+      toggleBtn.classList.remove("active");
+    }
+  } else {
+    section.style.display = "none";
   }
+});
 
-  // 🔁 Reset when search cleared
-  if (!query) {
-    filesContainer.style.display = "none";
-    toggleBtn.classList.remove("active");
-  }
-} else {
-  section.style.display = "none";
-}
-
-
-    });
 
     noResult.style.display = anyMatch || !query ? "none" : "block";
   }
