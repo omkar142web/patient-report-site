@@ -296,7 +296,7 @@ input:focus {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-.patient-toggle {
+/* .patient-toggle {
     width: 100%;
     background: var(--panel);
     color: white;
@@ -311,7 +311,7 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+} */
 
 .patient-files {
     display: none;
@@ -680,11 +680,11 @@ input:focus {
 
 
 
-
+/* 
 .patient-info-wrapper {
     position: relative;
     display: inline-block;
-}
+} */
 
 .info-icon {
     cursor: pointer;
@@ -717,13 +717,13 @@ input:focus {
     transition: all 0.2s ease;
 }
 
-.patient-info-wrapper:not(.open):hover .patient-info-card,
+/* .patient-info-wrapper:not(.open):hover .patient-info-card,
 .patient-info-wrapper.open .patient-info-card {
 
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
-}
+} */
 
 .zip-btn {
     margin-top: 10px;
@@ -800,12 +800,12 @@ input:focus {
 /* =========================================================
    Patient list row — truncate NAME only, keep right side intact
    ========================================================= */
-
+/* 
 .patient-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
-}
+} */
 
 /* Patient name (LEFT) */
 .patient-name {
@@ -816,13 +816,13 @@ input:focus {
     text-overflow: ellipsis;
 }
 
-/* Right side: (n files) + ⓘ */
+/* Right side: (n files) + ⓘ
 .patient-info-wrapper {
     display: flex;
     align-items: center;
     gap: 6px;
-    flex-shrink: 0;           /* NEVER shrink */
-}
+    flex-shrink: 0;           /* NEVER shrink 
+} */
 
 .file-count-text {
     white-space: nowrap;      /* keep "(n files)" intact */
@@ -837,12 +837,12 @@ input:focus {
    FORCE truncation for patient names on ALL screen sizes
    ========================================================= */
 
-.patient-toggle {
+/* .patient-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 100%;          /* constrain button width */
-}
+    width: 100%;   }       /* constrain button width */
+
 
 /* LEFT: patient name */
 .patient-name {
@@ -854,12 +854,12 @@ input:focus {
 }
 
 /* RIGHT: (n files) + info icon */
-.patient-info-wrapper {
+/* .patient-info-wrapper {
     display: flex;
     align-items: center;
     gap: 6px;
-    flex-shrink: 0;       /* NEVER shrink */
-}
+    flex-shrink: 0;       /* NEVER shrink 
+} */
 
 .file-count-text {
     white-space: nowrap;  /* keep intact */
@@ -867,11 +867,11 @@ input:focus {
 
 
 
-.patient-toggle {
+/* .patient-toggle {
     display: flex;
     width: 100%;
     min-width: 0;
-}
+} */
 
 .patient-name {
     flex: 1;
@@ -881,16 +881,16 @@ input:focus {
     text-overflow: ellipsis;
 }
 
-.patient-toggle {
+/* .patient-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
 
     width: 100%;
-    min-width: 0;        /* CRITICAL */
+    min-width: 0;        CRITICAL 
 
-    justify-content: flex-start; /* ⛔ NOT space-between */
-}
+    justify-content: flex-start; } ⛔ NOT space-between */
+ 
 
 .patient-name {
     flex: 1 1 auto;     /* allow shrinking */
@@ -900,10 +900,10 @@ input:focus {
     text-overflow: ellipsis;
 }
 
-.patient-info-wrapper {
-    flex-shrink: 0;     /* keep right side fixed */
+/* .patient-info-wrapper {
+    flex-shrink: 0;     /* keep right side fixed 
     position: relative;
-}
+} */
 
 
 @media (max-width: 480px) {
@@ -954,24 +954,24 @@ input:focus {
    FORCE truncation for patient names - FIX
    ========================================================= */
 
-.patient-toggle {
+/* .patient-toggle {
     display: grid;
-    /* Column 1: Flexible name, Column 2: Fixed-width info stuff */
+    /* Column 1: Flexible name, Column 2: Fixed-width info stuff 
     grid-template-columns: 1fr auto; 
     align-items: center;
     gap: 12px;
 
     width: 100%;
-    max-width: 100%; /* Prevents growing beyond parent */
+    max-width: 100%; /* Prevents growing beyond parent 
     box-sizing: border-box;
-    overflow: hidden; /* Contains children */
+    overflow: hidden; /* Contains children 
     
-    /* Reset existing button styles to ensure consistency */
+    /* Reset existing button styles to ensure consistency 
     background: var(--panel);
     padding: 15px 20px;
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.05);
-}
+} */
 
 .patient-name {
     min-width: 0;           /* CRITICAL: Allows grid item to shrink below content size */
@@ -981,13 +981,13 @@ input:focus {
     text-align: left;
 }
 
-.patient-info-wrapper {
+/* .patient-info-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-shrink: 0;         /* Prevents the (n files) from disappearing */
+    flex-shrink: 0;         /* Prevents the (n files) from disappearing 
     justify-content: flex-end;
-}
+} */
 
 .file-count-text {
     white-space: nowrap;    /* Prevents "(2" and "files)" from splitting into two lines */
@@ -995,22 +995,22 @@ input:focus {
     color: var(--text-dim);
 }
 
-.patient-toggle {
+/* .patient-toggle {
     display: grid;
     grid-template-columns: 1fr auto; 
     align-items: center;
     gap: 12px;
     width: 100%;
     
-    /* REMOVE overflow: hidden; from here */
+    /* REMOVE overflow: hidden; from here 
     overflow: visible; 
     
-    position: relative; /* Keep this so the popup knows where to anchor */
+    position: relative; /* Keep this so the popup knows where to anchor 
     background: var(--panel);
     padding: 15px 20px;
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.05);
-}
+} */
 
 .patient-name {
     min-width: 0;
@@ -1052,7 +1052,7 @@ input:focus {
 /* -------------------------------
    Patient toggle row (GRID-based)
    ------------------------------- */
-.patient-toggle {
+/* .patient-toggle {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -1062,12 +1062,12 @@ input:focus {
     box-sizing: border-box;
     position: relative;
 
-    /* keep your existing look */
+    /* keep your existing look 
     background: var(--panel);
     padding: clamp(12px, 3vw, 16px);
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.05);
-}
+} */
 
 /* Patient name — THIS enables ellipsis */
 .patient-name {
@@ -1078,13 +1078,13 @@ input:focus {
 }
 
 /* Right side: (n files) + info icon */
-.patient-info-wrapper {
+/* .patient-info-wrapper {
     display: flex;
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
     position: relative;
-}
+} */
 
 .file-count-text {
     white-space: nowrap;
@@ -1120,11 +1120,11 @@ input:focus {
 }
 
 /* Show popup */
-.patient-info-wrapper.open .patient-info-card {
+/* .patient-info-wrapper.open .patient-info-card {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
-}
+} */
 
 /* -------------------------------
    Center popup content nicely
@@ -1201,4 +1201,122 @@ input:focus {
 /* Safety net: never allow horizontal scroll */
 body {
     overflow-x: hidden;
+}
+
+
+
+
+/* =========================================================
+   FINAL — Info Menu (ⓘ) Clean & Stable
+   ========================================================= */
+
+/* Patient row layout */
+.patient-toggle {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    position: relative;
+
+    background: var(--panel);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+
+    cursor: pointer;
+}
+
+/* Patient name (ellipsis works 100%) */
+.patient-name {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Right side container */
+.patient-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.file-count-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+.info-icon {
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 50%;
+}
+
+.info-icon:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--accent);
+}
+
+/* Info popup */
+.patient-info-card {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: min(180px, calc(100vw - 32px));
+    z-index: 1000;
+
+    background: rgba(30, 41, 59, 0.98);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: all 0.2s ease;
+}
+
+/* Show popup */
+.patient-info-wrapper.open .patient-info-card {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Popup content */
+.patient-info-card .patient-header {
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.patient-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.patient-stats div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
