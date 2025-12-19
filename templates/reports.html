@@ -25,19 +25,25 @@
         <h1>Patient Records 📋</h1>
 
         <form class="search-box" action="{{ url_for('reports') }}" method="get">
-          <label for="search" class="sr-only"
-            >Search patient or report name</label
-          >
-          <input
-            id="search"
-            name="search"
-            placeholder="🔍 Search patient or report name..."
-            value="{{ search }}"
-          />
-          <button type="submit" class="search-btn">Search</button>
-        </form>
+  <label for="search" class="sr-only">
+    Search patient or report name
+  </label>
 
-        <div id="searchCounter" class="search-counter"></div>
+  <input
+    id="search"
+    name="search"
+    placeholder="🔍 Search patient or report name..."
+    value="{{ search }}"
+  />
+
+  <!-- INLINE RESULT COUNT -->
+  <span id="searchCounter" class="search-count-inline"></span>
+
+  <button type="submit" class="search-btn">Search</button>
+</form>
+
+
+        
 
 
         <div id="searchNoResult" class="search-no-result">
@@ -339,10 +345,11 @@ sectionsArray.forEach(section => {
 
 const counter = document.getElementById("searchCounter");
 if (query && anyMatch) {
-  counter.textContent = `Showing ${matchCount} result${matchCount > 1 ? "s" : ""}`;
+  counter.textContent = `(${matchCount} result${matchCount > 1 ? "s" : ""})`;
 } else {
   counter.textContent = "";
 }
+
 
   }
 

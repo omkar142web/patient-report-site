@@ -1086,10 +1086,14 @@ mark {
     display: none;
 }
 
-.search-counter {
-  margin: 8px auto 0;
-  max-width: 800px;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  text-align: right;
+/* Inline search result counter (matches "(2 files)" style) */
+.search-count-inline {
+    font-size: 1.0rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+
+    padding: 0 6px;
+    margin: 0 6px;
+
+    opacity: 0.9;
 }
