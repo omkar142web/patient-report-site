@@ -161,52 +161,49 @@
     <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
-    let openedByClick = false;
     const icon = wrapper.querySelector(".info-icon");
 
     // CLICK → toggle + lock
     icon.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      if (!openedByClick) {
-        // first click always LOCKS it open
-        wrapper.classList.add("open");
-        openedByClick = true;
-      } else {
-        // second click closes
+      if (wrapper.dataset.locked === "true") {
         wrapper.classList.remove("open");
-        openedByClick = false;
+        wrapper.dataset.locked = "false";
+      } else {
+        wrapper.classList.add("open");
+        wrapper.dataset.locked = "true";
       }
     });
 
     // HOVER (desktop only) → temporary open
     wrapper.addEventListener("mouseenter", () => {
-      if (!openedByClick && window.matchMedia("(hover: hover)").matches) {
+      if (
+        wrapper.dataset.locked !== "true" &&
+        window.matchMedia("(hover: hover)").matches
+      ) {
         wrapper.classList.add("open");
       }
     });
 
-    // HOVER OUT → close only if not locked by click
+    // HOVER OUT → close if not locked
     wrapper.addEventListener("mouseleave", () => {
-      if (!openedByClick) {
+      if (wrapper.dataset.locked !== "true") {
         wrapper.classList.remove("open");
       }
     });
   });
 
-  // CLICK OUTSIDE → close all
+  // CLICK OUTSIDE → close everything & unlock
   document.addEventListener("click", () => {
     document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
       wrapper.classList.remove("open");
+      wrapper.dataset.locked = "false";
     });
-
-  // reset ALL locks
-  document
-    .querySelectorAll(".patient-info-wrapper")
-    .forEach(() => openedByClick = false);
   });
 });
 </script>
+
 
 
 
