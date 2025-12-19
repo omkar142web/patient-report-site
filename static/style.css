@@ -684,71 +684,104 @@ input:focus {
 
 
 
+
+
+
+
+
+
+/* =========================================================
+   ZIP DOWNLOAD BUTTON — FINAL COMBINED VERSION
+   Compatible with patient-info-card, mobile & no overflow
+   ========================================================= */
+
 .zip-btn {
-  margin-top: 12px;
-  width: 100%;
+    margin-top: 10px;
+    width: 100%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  padding: 10px 14px;
-  border-radius: 999px;
+    /* compact height for small info card */
+    padding: 8px 10px;
+    padding-left: 40px; /* space reserved for icon */
 
-  background: linear-gradient(135deg, #6f6af8, #7c7cff);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #6f6af8, #7c7cff);
 
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.5px;
+    font-weight: 800;
+    font-size: 12.5px;
+    line-height: 1.1;
+    letter-spacing: 0.4px;
+    text-align: center;
 
-  color: #0f172a;
-  text-decoration: none;
-  cursor: pointer;
+    color: #0f172a;
+    text-decoration: none;
+    white-space: nowrap;
 
-  position: relative;
+    position: relative;
+    box-sizing: border-box;
 
-  box-shadow: 0 8px 20px rgba(124, 124, 255, 0.35);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow: 0 6px 16px rgba(124, 124, 255, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Hover lift + glow */
-.zip-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(124, 124, 255, 0.5);
-}
-
-/* Press feedback */
-.zip-btn:active {
-  transform: scale(0.97);
-}
-
-/* Left icon bubble (same behavior as orange version) */
+/* ---------------------------------------------------------
+   Left circular icon (safe, no layout shift)
+   --------------------------------------------------------- */
 .zip-btn::before {
-  content: "⬇";
+    content: "⬇";
 
-  position: absolute;
-  left: 8px;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
 
-  width: 30px;
-  height: 30px;
+    width: 24px;
+    height: 24px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  border-radius: 50%;
-  background: #ffffff;
-  color: #6f6af8;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #6f6af8;
 
-  font-size: 14px;
+    font-size: 12px;
 }
 
-/* Smooth icon hover response */
-.zip-btn:hover::before {
-  transform: scale(1.05);
+/* ---------------------------------------------------------
+   Hover effects (desktop only, matches your hover rules)
+   --------------------------------------------------------- */
+@media (hover: hover) {
+    .zip-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(124, 124, 255, 0.45);
+    }
+
+    .zip-btn:hover::before {
+        transform: translateY(-50%) scale(1.08);
+    }
 }
+
+/* ---------------------------------------------------------
+   Active / press feedback
+   --------------------------------------------------------- */
+.zip-btn:active {
+    transform: scale(0.96);
+}
+
+/* ---------------------------------------------------------
+   Disabled state (optional, safe)
+   --------------------------------------------------------- */
+.zip-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    box-shadow: none;
+}
+
 
 
 
