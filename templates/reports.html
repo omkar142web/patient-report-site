@@ -190,14 +190,30 @@ Download
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
+  const wrappers = document.querySelectorAll(".patient-info-wrapper");
+
+  function closeOthers(current) {
+    wrappers.forEach(w => {
+      if (w !== current) {
+        w.classList.remove("open");
+        w.dataset.locked = "false";
+      }
+    });
+  }
+
+  wrappers.forEach(wrapper => {
     const icon = wrapper.querySelector(".info-icon");
 
-    // CLICK → toggle + lock
+    // CLICK → toggle + lock (WORKS ON FIRST CLICK)
     icon.addEventListener("click", (e) => {
-      e.stopPropagation();
+      e.stopPropagation(); // keep original behavior
 
-      if (wrapper.dataset.locked === "true") {
+      const isLocked = wrapper.dataset.locked === "true";
+
+      // 🔥 NEW: close other menus only
+      closeOthers(wrapper);
+
+      if (isLocked) {
         wrapper.classList.remove("open");
         wrapper.dataset.locked = "false";
       } else {
@@ -212,6 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
         wrapper.dataset.locked !== "true" &&
         window.matchMedia("(hover: hover)").matches
       ) {
+        closeOthers(wrapper); // 🔥 ensure one at a time
         wrapper.classList.add("open");
       }
     });
@@ -226,13 +243,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // CLICK OUTSIDE → close everything & unlock
   document.addEventListener("click", () => {
-    document.querySelectorAll(".patient-info-wrapper").forEach(wrapper => {
+    wrappers.forEach(wrapper => {
       wrapper.classList.remove("open");
       wrapper.dataset.locked = "false";
     });
   });
 });
 </script>
+
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

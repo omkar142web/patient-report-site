@@ -994,7 +994,9 @@ body {
 .patient-info-card {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
+    right: clamp(12px, 10vw, 30px);
+    transform: translateX(-10px);
+
 
     width: min(140px, calc(100vw - 32px));    
     /* width: min(180px changed to 140 */
