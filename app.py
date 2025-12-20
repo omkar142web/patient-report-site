@@ -113,7 +113,7 @@ def index():
                 errors.append(f"File '{secure_filename(f.filename)}' has an unsupported type.")
 
         if uploaded_count > 0:
-            success_message = f"{uploaded_count} file(s) uploaded successfully for {patient}."
+            success_message = f"{uploaded_count} file(s) uploaded for {patient}."
             return jsonify({"success": success_message})
 
     return render_template("index.html")

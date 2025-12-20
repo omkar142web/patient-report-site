@@ -17,6 +17,7 @@ function showToast(message, type = 'info') {
     }
 
     const text = document.createElement('span');
+    text.className = 'toast-text';   // ✅ ADD THIS
     text.textContent = message;
 
     const closeBtn = document.createElement('button');
