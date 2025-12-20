@@ -1099,3 +1099,24 @@ mark {
 
     opacity: 0.9;
 }
+
+
+@media (min-width: 769px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        height: 100vh;
+        overflow-y: auto;
+
+        /* keep original width */
+        width: 200px;
+
+        scrollbar-width: thin;
+    }
+
+    .main {
+        margin-left: 200px; /* same as sidebar width */
+    }
+}
